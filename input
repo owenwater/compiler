@@ -1,0 +1,11 @@
+class A {
+	
+	void main()
+	{
+		int a;
+		a = 2 + 3;
+	}
+	void cat(int n)
+	{}
+
+}
