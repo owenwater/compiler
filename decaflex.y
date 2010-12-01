@@ -5,9 +5,10 @@
 	#include "print.h"
 	int yylex(void);
 	void yyerror(const char *s);
+	string add_str(string s);
 	Stack s;
 	vector <string> args_list;
-	int str_num;
+	vector <string> string_record;
 %}
 %debug
 %code requires{
@@ -110,10 +111,10 @@ id_comma_list: tcomma id id_comma_list {
 			   | {
 			   /*$$ =  "(id_comma_list EPSILON)";*/
 			   }
-type:  T_INT {/*$$ = "(type (T_INT int))";*/}
-	 | T_BOOL{/*$$ = "(type (T_BOOL bool))";*/}
+type:  T_INT { $$ = "int"/*$$ = "(type (T_INT int))";*/}
+	 | T_BOOL{ $$ = "bool"/*$$ = "(type (T_BOOL bool))";*/}
 
-tvoid: T_VOID{/*$$ = "(T_VOID void)";*/}
+tvoid: T_VOID{ $$ = "void"/*$$ = "(T_VOID void)";*/}
 
 statement_list: statement statement_list{
 			  	/*$$ = "(statement_list "+$1+$2+")";*/
@@ -179,10 +180,20 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 					for (int i = args_list.size() - 1; i >= 0 ; i--)
 					{
 						cout << p.print_int(args_list[i]) << endl;
-						cout << p.print_str(" ") << endl;
+						if (i != 0)cout << p.print_str(" ") << endl;
 					}
 					cout << p.print_str("\n") << endl;
 					
+				}
+				else if ($1 == "print_str")
+				{
+					for (int i = args_list.size() - 1; i>= 0; i--)
+					{
+						string ret = add_str(args_list[i]);
+						cout <<  p.print_str(ret) << endl;
+						if (i != 0 )cout <<  p.print_str(" ") << endl;
+					}
+					cout << p.print_str("\n") << endl;
 				}
 				args_list.clear();
 					/*$$ = "(callout_arg_list " + $1+$2+")";*/
@@ -318,14 +329,17 @@ constant: intconstant {
 		|bool_constant {
 			/*$$ = "(constant " + $1 + ")";*/
 		}
-bool_constant: T_TRUE {/*$$ = "(bool_constant (T_TRUE "+$1+"))";*/}
-			|T_FALSE {/*$$ = "(bool_constant (T_FALSE "+$1+"))";*/}
+bool_constant: T_TRUE {
+			 $$ = s.stack[s.sp].new_value(1);
+			 		/*$$ = "(bool_constant (T_TRUE "+$1+"))";*/}
+			|T_FALSE {
+					$$ = s.stack[s.sp].new_value(0);
+					/*$$ = "(bool_constant (T_FALSE "+$1+"))";*/}
 intconstant: T_INTCONSTANT { /*$$ = "(T_INTCONSTANT "+$1+")";*/}
 
 
 stringconstant: T_STRINGCONSTANT {
 			  string s = $1.substr(1, $1.length() - 2);
-			  //cerr << s<< endl;
 			  $$ = s;
 			  /*$$ = "(T_STRINGCONSTANT "+$1+")";*/ }
 id: T_ID { $$ = $1; /*$$ = "(T_ID "+ $1+")";*/}
@@ -374,9 +388,26 @@ void yyerror(const char *s)
 	cerr << s << endl;
 }
 
+string get_tag(int i)
+{
+	stringstream ss;
+	ss << i;
+	string tag(ss.str());
+	tag = "str"+tag;
+	return tag;
+}
+
+string add_str(string s)
+{
+	string_record.push_back(s);
+	string tag = get_tag(string_record.size() - 1);
+	return tag;
+}
+
 int init()
 {
-		str_num = 0;
+		string_record.clear();
+
 		yydebug = 0;
 		args_list.clear();
 
@@ -386,7 +417,7 @@ int init()
 		cout <<".asciiz \" \""<< endl;
 		
 		cout <<"enter:" << endl;
-		cout <<".asciiz \"\n\""<< endl;
+		cout <<".asciiz \"\\n\""<< endl;
 
 		cout << ".text"<< endl;
 		cout << ".globl main"<< endl;
@@ -394,11 +425,24 @@ int init()
 
 }
 
+int end()
+{
+	for (int i = 0 ; i < string_record.size() ; i++)
+	{
+		string tag = get_tag(i);
+		cout << tag<<":" << endl;
+		cout <<".asciiz \""<< string_record[i] << "\""<< endl;
+		cout << endl;
+		
+	}
+}
+
 int main()
 {
 	try{
 		init();
 		yyparse();
+		end();
 	}
 	catch (const char *s)
 	{

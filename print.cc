@@ -3,7 +3,7 @@
 
 string Print::print_int(string s)
 {
-	cerr << s << endl;
+	//cerr << s << endl;
 	string ret;
 	ret =  "move $a0, $" +  s + "\nli $v0, 1\nsyscall";
 	return ret;

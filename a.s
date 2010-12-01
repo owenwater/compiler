@@ -2,8 +2,7 @@
 space:
 .asciiz " "
 enter:
-.asciiz "
-"
+.asciiz "\n"
 .text
 .globl main
 main:
@@ -42,7 +41,10 @@ move $a0, $t1
 li $v0, 1
 syscall
 li $v0, 4
-la $a0, space
+la $a0, enter
+syscall
+li $v0, 4
+la $a0, str0
 syscall
 li $v0, 4
 la $a0, enter
@@ -50,3 +52,6 @@ syscall
 addu $sp, 0
 li $v0, 10
 syscall
+str0:
+.asciiz "h"
+

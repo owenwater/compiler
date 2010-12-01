@@ -75,13 +75,14 @@
 	#include "print.h"
 	int yylex(void);
 	void yyerror(const char *s);
+	string add_str(string s);
 	Stack s;
 	vector <string> args_list;
-	int str_num;
+	vector <string> string_record;
 
 
 /* Line 189 of yacc.c  */
-#line 85 "parser.cpp"
+#line 86 "parser.cpp"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -104,14 +105,14 @@
 /* "%code requires" blocks.  */
 
 /* Line 209 of yacc.c  */
-#line 13 "decaflex.y"
+#line 14 "decaflex.y"
 
 	#define YYSTYPE string
 
 
 
 /* Line 209 of yacc.c  */
-#line 115 "parser.cpp"
+#line 116 "parser.cpp"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -187,7 +188,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 191 "parser.cpp"
+#line 192 "parser.cpp"
 
 #ifdef short
 # undef short
@@ -510,16 +511,16 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    35,    35,    39,    42,    45,    46,    49,    52,    55,
-      56,    59,    63,    66,    68,    72,    82,    85,    86,    89,
-      92,    94,    97,   100,   102,   107,   110,   113,   114,   116,
-     118,   121,   124,   127,   130,   133,   136,   139,   142,   145,
-     148,   151,   155,   158,   161,   168,   171,   175,   190,   195,
-     198,   202,   206,   208,   209,   213,   216,   220,   221,   223,
-     227,   230,   233,   240,   247,   257,   266,   276,   280,   283,
-     308,   315,   318,   321,   322,   323,   326,   331,   334,   335,
-     336,   337,   338,   339,   341,   344,   347,   348,   351,   352,
-     356,   359,   360,   363,   364,   365,   366
+       0,    36,    36,    40,    43,    46,    47,    50,    53,    56,
+      57,    60,    64,    67,    69,    73,    83,    86,    87,    90,
+      93,    95,    98,   101,   103,   108,   111,   114,   115,   117,
+     119,   122,   125,   128,   131,   134,   137,   140,   143,   146,
+     149,   152,   156,   159,   162,   169,   172,   176,   201,   206,
+     209,   213,   217,   219,   220,   224,   227,   231,   232,   234,
+     238,   241,   244,   251,   258,   268,   277,   287,   291,   294,
+     319,   326,   329,   332,   335,   338,   341,   345,   348,   349,
+     350,   351,   352,   353,   355,   358,   361,   362,   365,   366,
+     370,   373,   374,   377,   378,   379,   380
 };
 #endif
 
@@ -1558,7 +1559,7 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 35 "decaflex.y"
+#line 36 "decaflex.y"
     {
 	   		//cout <<"(program "<<$1 << $2 << $3<<$4;
 			//cout << $5 << $6<< ")" <<endl;
@@ -1568,7 +1569,7 @@ yyreduce:
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 39 "decaflex.y"
+#line 40 "decaflex.y"
     {
 		  	/*$$ = "(class_name "+$1+")";*/
 		  ;}
@@ -1577,7 +1578,7 @@ yyreduce:
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 42 "decaflex.y"
+#line 43 "decaflex.y"
     {
 			   		/*$$ = "(field_decl_list "+ $1+$2+")";*/
 			   ;}
@@ -1586,14 +1587,14 @@ yyreduce:
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 45 "decaflex.y"
+#line 46 "decaflex.y"
     { /*$$ = "(field_decl_list EPSILON)";*/;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 46 "decaflex.y"
+#line 47 "decaflex.y"
     {
 		  			/*$$ = "(field_decl "+$1 + $2 + ")";*/
 		       ;}
@@ -1602,7 +1603,7 @@ yyreduce:
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 49 "decaflex.y"
+#line 50 "decaflex.y"
     {
 		   			/*$$ = "(field_decl "+$1+$2+$3+$4+$5+")";*/
 		   	   ;}
@@ -1611,7 +1612,7 @@ yyreduce:
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 52 "decaflex.y"
+#line 53 "decaflex.y"
     {
 		  		/*$$ = "(field_list " +$1+ $2 + $3 +")";*/
 		    ;}
@@ -1620,14 +1621,14 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 55 "decaflex.y"
+#line 56 "decaflex.y"
     {/*$$ = "(field_list "+$1+$2+")";*/;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 56 "decaflex.y"
+#line 57 "decaflex.y"
     {
 				/*$$ = "(field "+ $1 + ")";*/
 			;}
@@ -1636,7 +1637,7 @@ yyreduce:
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 59 "decaflex.y"
+#line 60 "decaflex.y"
     {
 		 		/*$$ = "(field "+ $1+$2+$3+$4+")";*/
 		    ;}
@@ -1645,7 +1646,7 @@ yyreduce:
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 63 "decaflex.y"
+#line 64 "decaflex.y"
     {
 					/*$$ = "(method_decl_list "+ $1+$2+")";*/
 				;}
@@ -1654,7 +1655,7 @@ yyreduce:
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 66 "decaflex.y"
+#line 67 "decaflex.y"
     {
 				/*$$ = "";*/;}
     break;
@@ -1662,7 +1663,7 @@ yyreduce:
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 68 "decaflex.y"
+#line 69 "decaflex.y"
     {
 		   		//cout << $2 << ":"<< endl;
 		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
@@ -1672,7 +1673,7 @@ yyreduce:
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 72 "decaflex.y"
+#line 73 "decaflex.y"
     {
 		   		//cout << $2 << ":"<< endl;
 				if ((yyvsp[(2) - (6)]) == "main")
@@ -1687,7 +1688,7 @@ yyreduce:
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 82 "decaflex.y"
+#line 83 "decaflex.y"
     {
 		  		/*$$ = "(param_list "+$1 + ")";*/
 		  ;}
@@ -1696,14 +1697,14 @@ yyreduce:
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 85 "decaflex.y"
+#line 86 "decaflex.y"
     {/*$$ = "(param_list EPSILON)";*/;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 86 "decaflex.y"
+#line 87 "decaflex.y"
     {
 				/*$$ = "(param_comma_list "+ $1+$2+$3+")";*/
 				;}
@@ -1712,7 +1713,7 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 89 "decaflex.y"
+#line 90 "decaflex.y"
     {
 					/*$$= "(param_comma_list " + $1+")";*/
 				;}
@@ -1721,14 +1722,14 @@ yyreduce:
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 92 "decaflex.y"
+#line 93 "decaflex.y"
     {/*$$ = "(param "+$1+$2+")";*/;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 94 "decaflex.y"
+#line 95 "decaflex.y"
     {
 					/*$$ = "(block " + $1+$2+$3+$4+")";*/
 				;}
@@ -1737,7 +1738,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 97 "decaflex.y"
+#line 98 "decaflex.y"
     {
 			 	/*$$ = "(var_decl_list " + $1+$2+")";*/
 			 ;}
@@ -1746,14 +1747,14 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 100 "decaflex.y"
+#line 101 "decaflex.y"
     {/*$$ = "(var_decl_list EPSILON)";*/;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 102 "decaflex.y"
+#line 103 "decaflex.y"
     {
 			int rt = s.stack[s.sp].add_var((yyvsp[(2) - (4)]));
 			/*$$ = "(var_decl "+$1+$2+$3+$4+")";*/
@@ -1763,7 +1764,7 @@ yyreduce:
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 107 "decaflex.y"
+#line 108 "decaflex.y"
     {
 			int rt = s.stack[s.sp].add_var((yyvsp[(2) - (3)]));
 			 		/*$$ = "(id_comma_list "+$1+$2+$3+")";*/;}
@@ -1772,7 +1773,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 110 "decaflex.y"
+#line 111 "decaflex.y"
     {
 			   /*$$ =  "(id_comma_list EPSILON)";*/
 			   ;}
@@ -1781,28 +1782,28 @@ yyreduce:
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 113 "decaflex.y"
-    {/*$$ = "(type (T_INT int))";*/;}
+#line 114 "decaflex.y"
+    { (yyval) = "int"/*$$ = "(type (T_INT int))";*/;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 114 "decaflex.y"
-    {/*$$ = "(type (T_BOOL bool))";*/;}
+#line 115 "decaflex.y"
+    { (yyval) = "bool"/*$$ = "(type (T_BOOL bool))";*/;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 116 "decaflex.y"
-    {/*$$ = "(T_VOID void)";*/;}
+#line 117 "decaflex.y"
+    { (yyval) = "void"/*$$ = "(T_VOID void)";*/;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 118 "decaflex.y"
+#line 119 "decaflex.y"
     {
 			  	/*$$ = "(statement_list "+$1+$2+")";*/
 			  ;}
@@ -1811,14 +1812,14 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 121 "decaflex.y"
+#line 122 "decaflex.y"
     {/*$$ = "(statement_list EPSILON)";*/;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 124 "decaflex.y"
+#line 125 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+")";*/
 		 ;}
@@ -1827,7 +1828,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 127 "decaflex.y"
+#line 128 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+")";*/
 		 ;}
@@ -1836,7 +1837,7 @@ yyreduce:
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 130 "decaflex.y"
+#line 131 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 ;}
@@ -1845,7 +1846,7 @@ yyreduce:
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 133 "decaflex.y"
+#line 134 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+$6+$7+")";*/
 		 ;}
@@ -1854,7 +1855,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 136 "decaflex.y"
+#line 137 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 ;}
@@ -1863,7 +1864,7 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 139 "decaflex.y"
+#line 140 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+$6+$7+$8+")";*/
 		 ;}
@@ -1872,7 +1873,7 @@ yyreduce:
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 142 "decaflex.y"
+#line 143 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+$3+")";*/
 		 ;}
@@ -1881,7 +1882,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 145 "decaflex.y"
+#line 146 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+")";*/
 		 ;}
@@ -1890,7 +1891,7 @@ yyreduce:
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 148 "decaflex.y"
+#line 149 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+$2+")";*/
 		 ;}
@@ -1899,7 +1900,7 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 151 "decaflex.y"
+#line 152 "decaflex.y"
     {
 		 	/*$$ = "(statement "+$1+")";*/
 		 ;}
@@ -1908,7 +1909,7 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 155 "decaflex.y"
+#line 156 "decaflex.y"
     {
 				 	/*$$ = "(assign_comma_list "+$1+$2+$3+")";*/
 				 ;}
@@ -1917,7 +1918,7 @@ yyreduce:
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 158 "decaflex.y"
+#line 159 "decaflex.y"
     {
 				 	/*$$ = "(assign_comma_list "+ $1+")";*/
 				 ;}
@@ -1926,7 +1927,7 @@ yyreduce:
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 161 "decaflex.y"
+#line 162 "decaflex.y"
     {
 	  		s.stack[s.sp].set_var((yyvsp[(1) - (3)]), (yyvsp[(3) - (3)]));
 			s.stack[s.sp].remove_slot((yyvsp[(3) - (3)]));
@@ -1938,7 +1939,7 @@ yyreduce:
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 168 "decaflex.y"
+#line 169 "decaflex.y"
     {
 				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			;}
@@ -1947,7 +1948,7 @@ yyreduce:
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 171 "decaflex.y"
+#line 172 "decaflex.y"
     {
 				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			;}
@@ -1956,7 +1957,7 @@ yyreduce:
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 175 "decaflex.y"
+#line 176 "decaflex.y"
     {
 				Print p;
 				if ((yyvsp[(1) - (2)]) == "print_int")
@@ -1964,10 +1965,20 @@ yyreduce:
 					for (int i = args_list.size() - 1; i >= 0 ; i--)
 					{
 						cout << p.print_int(args_list[i]) << endl;
-						cout << p.print_str(" ") << endl;
+						if (i != 0)cout << p.print_str(" ") << endl;
 					}
 					cout << p.print_str("\n") << endl;
 					
+				}
+				else if ((yyvsp[(1) - (2)]) == "print_str")
+				{
+					for (int i = args_list.size() - 1; i>= 0; i--)
+					{
+						string ret = add_str(args_list[i]);
+						cout <<  p.print_str(ret) << endl;
+						if (i != 0 )cout <<  p.print_str(" ") << endl;
+					}
+					cout << p.print_str("\n") << endl;
 				}
 				args_list.clear();
 					/*$$ = "(callout_arg_list " + $1+$2+")";*/
@@ -1977,7 +1988,7 @@ yyreduce:
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 190 "decaflex.y"
+#line 201 "decaflex.y"
     {
 					  args_list.push_back((yyvsp[(2) - (3)]));
 					  /*$$ = "(callout_arg_comma_list " + $1+$2+$3+")";*/
@@ -1988,7 +1999,7 @@ yyreduce:
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 195 "decaflex.y"
+#line 206 "decaflex.y"
     {
 					/*$$ = "(callout_arg_comma_list EPSILON)";*/
 				;}
@@ -1997,7 +2008,7 @@ yyreduce:
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 198 "decaflex.y"
+#line 209 "decaflex.y"
     {
 		   (yyval) = (yyvsp[(1) - (1)]);
 		   		/*$$ = "(callout_arg " + $1 + ")";*/
@@ -2007,7 +2018,7 @@ yyreduce:
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 202 "decaflex.y"
+#line 213 "decaflex.y"
     {
 		   (yyval) = (yyvsp[(1) - (1)]);
 		   		/*$$ = "(callout_arg " + $1 +")";*/
@@ -2017,21 +2028,21 @@ yyreduce:
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 206 "decaflex.y"
+#line 217 "decaflex.y"
     {/*$$ = $1;*/;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 208 "decaflex.y"
+#line 219 "decaflex.y"
     { (yyval) = (yyvsp[(1) - (1)]);/*$$ = "(lvalue " + $1 + ")";*/;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 209 "decaflex.y"
+#line 220 "decaflex.y"
     {
 	  	/*$$ = "(lvalue " + $1+$2+$3+$4+ ")";*/
 	  ;}
@@ -2040,7 +2051,7 @@ yyreduce:
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 213 "decaflex.y"
+#line 224 "decaflex.y"
     {
 			   		/*$$ = "(expr_comma_list "+$1+$2+$3+")";*/
 				;}
@@ -2049,7 +2060,7 @@ yyreduce:
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 216 "decaflex.y"
+#line 227 "decaflex.y"
     {
 			   		/*$$ = "(expr_comma_list "+$1+")";*/
 				;}
@@ -2058,21 +2069,21 @@ yyreduce:
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 220 "decaflex.y"
+#line 231 "decaflex.y"
     { /*$$ = "(opt_expr " + $1+ ")";*/;}
     break;
 
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 221 "decaflex.y"
+#line 232 "decaflex.y"
     {/*$$ = "(opt_expr EPSILON)";*/;}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 223 "decaflex.y"
+#line 234 "decaflex.y"
     {
 		(yyval) = s.stack[s.sp].get_var((yyvsp[(1) - (1)]));
 		/*$$ = "(expr " + $1+")";*/
@@ -2082,7 +2093,7 @@ yyreduce:
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 227 "decaflex.y"
+#line 238 "decaflex.y"
     {
 		/*$$ = "(expr " + $1+")";*/
 	  ;}
@@ -2091,7 +2102,7 @@ yyreduce:
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 230 "decaflex.y"
+#line 241 "decaflex.y"
     {
 		/*$$ = "(expr " + $1+")";*/
 	  ;}
@@ -2100,7 +2111,7 @@ yyreduce:
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 233 "decaflex.y"
+#line 244 "decaflex.y"
     {
 	    string res = s.stack[s.sp].find_slot();
 	  	cout << "add $"<<res<<", $"<< (yyvsp[(1) - (3)])<<", $"<< (yyvsp[(3) - (3)])<< endl;
@@ -2113,7 +2124,7 @@ yyreduce:
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 240 "decaflex.y"
+#line 251 "decaflex.y"
     {
 	  	string res = s.stack[s.sp].find_slot();
 	  	cout << "sub $"<<res<<", $"<< (yyvsp[(1) - (3)])<<", $"<< (yyvsp[(3) - (3)])<< endl;
@@ -2126,7 +2137,7 @@ yyreduce:
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 247 "decaflex.y"
+#line 258 "decaflex.y"
     {
 	  	string res = s.stack[s.sp].find_slot();
 		cout << "mult $"<< (yyvsp[(1) - (3)]) <<", $" << (yyvsp[(3) - (3)]) << endl;
@@ -2142,7 +2153,7 @@ yyreduce:
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 257 "decaflex.y"
+#line 268 "decaflex.y"
     {
 	  	string res = s.stack[s.sp].find_slot();
 		cout << "div $"<< (yyvsp[(1) - (3)]) <<", $" << (yyvsp[(3) - (3)]) << endl;
@@ -2157,7 +2168,7 @@ yyreduce:
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 266 "decaflex.y"
+#line 277 "decaflex.y"
     {	
 	    string res = s.stack[s.sp].find_slot();
 		cout << "div $"<< (yyvsp[(1) - (3)]) <<", $" << (yyvsp[(3) - (3)]) << endl;
@@ -2172,7 +2183,7 @@ yyreduce:
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 276 "decaflex.y"
+#line 287 "decaflex.y"
     {
 	  	cout <<"sub $"<<(yyvsp[(2) - (2)]) <<", $0, $"<<(yyvsp[(2) - (2)])<< endl;
 		(yyval) = (yyvsp[(2) - (2)]);
@@ -2182,7 +2193,7 @@ yyreduce:
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 280 "decaflex.y"
+#line 291 "decaflex.y"
     {
 		/*$$ = "(expr " + $1+$2+")";*/
 	  ;}
@@ -2191,7 +2202,7 @@ yyreduce:
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 283 "decaflex.y"
+#line 294 "decaflex.y"
     {
 	  (yyval) = (yyvsp[(2) - (3)]);
 		/*$$ = "(expr " + $1+$2+$3+")";*/
@@ -2201,7 +2212,7 @@ yyreduce:
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 308 "decaflex.y"
+#line 319 "decaflex.y"
     {
 			stringstream ss((yyvsp[(1) - (1)]));
 			int value;
@@ -2214,7 +2225,7 @@ yyreduce:
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 315 "decaflex.y"
+#line 326 "decaflex.y"
     {
 			/*$$ = "(constant (T_CHARCONSTANT '"+$1+"'))";*/
 		;}
@@ -2223,7 +2234,7 @@ yyreduce:
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 318 "decaflex.y"
+#line 329 "decaflex.y"
     {
 			/*$$ = "(constant " + $1 + ")";*/
 		;}
@@ -2232,31 +2243,34 @@ yyreduce:
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 321 "decaflex.y"
-    {/*$$ = "(bool_constant (T_TRUE "+$1+"))";*/;}
+#line 332 "decaflex.y"
+    {
+			 (yyval) = s.stack[s.sp].new_value(1);
+			 		/*$$ = "(bool_constant (T_TRUE "+$1+"))";*/;}
     break;
 
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 322 "decaflex.y"
-    {/*$$ = "(bool_constant (T_FALSE "+$1+"))";*/;}
+#line 335 "decaflex.y"
+    {
+					(yyval) = s.stack[s.sp].new_value(0);
+					/*$$ = "(bool_constant (T_FALSE "+$1+"))";*/;}
     break;
 
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 323 "decaflex.y"
+#line 338 "decaflex.y"
     { /*$$ = "(T_INTCONSTANT "+$1+")";*/;}
     break;
 
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 326 "decaflex.y"
+#line 341 "decaflex.y"
     {
 			  string s = (yyvsp[(1) - (1)]).substr(1, (yyvsp[(1) - (1)]).length() - 2);
-			  //cerr << s<< endl;
 			  (yyval) = s;
 			  /*$$ = "(T_STRINGCONSTANT "+$1+")";*/ ;}
     break;
@@ -2264,147 +2278,147 @@ yyreduce:
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 331 "decaflex.y"
+#line 345 "decaflex.y"
     { (yyval) = (yyvsp[(1) - (1)]); /*$$ = "(T_ID "+ $1+")";*/;}
     break;
 
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 334 "decaflex.y"
+#line 348 "decaflex.y"
     { /*$$ = "(T_ASSIGN =)";*/ ;}
     break;
 
   case 79:
 
 /* Line 1455 of yacc.c  */
-#line 335 "decaflex.y"
+#line 349 "decaflex.y"
     { /*$$ = "(T_BREAK break)";*/ ;}
     break;
 
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 336 "decaflex.y"
+#line 350 "decaflex.y"
     { /*$$ = "(T_CALLOUT callout)";*/ ;}
     break;
 
   case 81:
 
 /* Line 1455 of yacc.c  */
-#line 337 "decaflex.y"
+#line 351 "decaflex.y"
     { /*$$ = "(T_CLASS class)";*/ ;}
     break;
 
   case 82:
 
 /* Line 1455 of yacc.c  */
-#line 338 "decaflex.y"
+#line 352 "decaflex.y"
     { /*$$ = "(T_COMMA ,)";*/ ;}
     break;
 
   case 83:
 
 /* Line 1455 of yacc.c  */
-#line 339 "decaflex.y"
+#line 353 "decaflex.y"
     { /*$$ = "(T_CONTINUE continue)";*/ ;}
     break;
 
   case 84:
 
 /* Line 1455 of yacc.c  */
-#line 341 "decaflex.y"
+#line 355 "decaflex.y"
     { /*$$ = "(T_ELSE else)";*/ ;}
     break;
 
   case 85:
 
 /* Line 1455 of yacc.c  */
-#line 344 "decaflex.y"
+#line 358 "decaflex.y"
     { /*$$ = "(T_FOR for)";*/ ;}
     break;
 
   case 86:
 
 /* Line 1455 of yacc.c  */
-#line 347 "decaflex.y"
+#line 361 "decaflex.y"
     { /*$$ = "(T_IF if)";*/ ;}
     break;
 
   case 87:
 
 /* Line 1455 of yacc.c  */
-#line 348 "decaflex.y"
+#line 362 "decaflex.y"
     { s.in();/*$$ = "(T_LCB {)";*/ ;}
     break;
 
   case 88:
 
 /* Line 1455 of yacc.c  */
-#line 351 "decaflex.y"
+#line 365 "decaflex.y"
     { /*$$ = "(T_LPAREN \\()";*/ ;}
     break;
 
   case 89:
 
 /* Line 1455 of yacc.c  */
-#line 352 "decaflex.y"
+#line 366 "decaflex.y"
     { /*$$ = "(T_LSB [)";*/ ;}
     break;
 
   case 90:
 
 /* Line 1455 of yacc.c  */
-#line 356 "decaflex.y"
+#line 370 "decaflex.y"
     { /*$$ = "(T_NOT !)";*/ ;}
     break;
 
   case 91:
 
 /* Line 1455 of yacc.c  */
-#line 359 "decaflex.y"
+#line 373 "decaflex.y"
     { s.out();/*$$ = "(T_RCB })";*/ ;}
     break;
 
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 360 "decaflex.y"
+#line 374 "decaflex.y"
     { /*$$ = "(T_RETURN return)";*/ ;}
     break;
 
   case 93:
 
 /* Line 1455 of yacc.c  */
-#line 363 "decaflex.y"
+#line 377 "decaflex.y"
     { /*$$ = "(T_RPAREN \\))";*/ ;}
     break;
 
   case 94:
 
 /* Line 1455 of yacc.c  */
-#line 364 "decaflex.y"
+#line 378 "decaflex.y"
     { /*$$ = "(T_RSB ])";*/ ;}
     break;
 
   case 95:
 
 /* Line 1455 of yacc.c  */
-#line 365 "decaflex.y"
+#line 379 "decaflex.y"
     { /*$$ = "(T_SEMICOLON ;)";*/ ;}
     break;
 
   case 96:
 
 /* Line 1455 of yacc.c  */
-#line 366 "decaflex.y"
+#line 380 "decaflex.y"
     { /*$$ = "(T_WHILE while)";*/ ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2408 "parser.cpp"
+#line 2422 "parser.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2616,7 +2630,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 369 "decaflex.y"
+#line 383 "decaflex.y"
 
 
 void yyerror(const char *s)
@@ -2625,9 +2639,26 @@ void yyerror(const char *s)
 	cerr << s << endl;
 }
 
+string get_tag(int i)
+{
+	stringstream ss;
+	ss << i;
+	string tag(ss.str());
+	tag = "str"+tag;
+	return tag;
+}
+
+string add_str(string s)
+{
+	string_record.push_back(s);
+	string tag = get_tag(string_record.size() - 1);
+	return tag;
+}
+
 int init()
 {
-		str_num = 0;
+		string_record.clear();
+
 		yydebug = 0;
 		args_list.clear();
 
@@ -2637,7 +2668,7 @@ int init()
 		cout <<".asciiz \" \""<< endl;
 		
 		cout <<"enter:" << endl;
-		cout <<".asciiz \"\n\""<< endl;
+		cout <<".asciiz \"\\n\""<< endl;
 
 		cout << ".text"<< endl;
 		cout << ".globl main"<< endl;
@@ -2645,11 +2676,24 @@ int init()
 
 }
 
+int end()
+{
+	for (int i = 0 ; i < string_record.size() ; i++)
+	{
+		string tag = get_tag(i);
+		cout << tag<<":" << endl;
+		cout <<".asciiz \""<< string_record[i] << "\""<< endl;
+		cout << endl;
+		
+	}
+}
+
 int main()
 {
 	try{
 		init();
 		yyparse();
+		end();
 	}
 	catch (const char *s)
 	{

@@ -1,2 +1,2 @@
-./a < input > a.s
+./a < test1 > a.s
 spim -file a.s
