@@ -1,11 +1,12 @@
 
 %{
 	#include "base.h"
-	#include "memory.h"
+	#include "stack.h"
 	#include "print.h"
 	int yylex(void);
 	void yyerror(const char *s);
 	string add_str(string s);
+	int print_string_taget();
 	Stack s;
 	vector <string> args_list;
 	vector <string> string_record;
@@ -34,6 +35,10 @@
 
 %%
 program: tclass class_name tlcb field_decl_list method_decl_list trcb {
+			print_string_taget();
+			cout << ".text"<< endl;
+			cout << ".globl main"<< endl;
+			cout << $6 << endl;
 	   		//cout <<"(program "<<$1 << $2 << $3<<$4;
 			//cout << $5 << $6<< ")" <<endl;
 	   }
@@ -67,15 +72,17 @@ method_decl_list: method_decl_list method_decl {
 				| {
 				/*$$ = "";*/}
 method_decl: type id tlparen param_list trparen block{
-		   		//cout << $2 << ":"<< endl;
+		   		s.add_cmd($2 + ":");
+				s.add_cmd($6);
 		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
 		   }
 		    | tvoid id tlparen param_list trparen block{
-		   		//cout << $2 << ":"<< endl;
+		   		s.add_cmd($2 + ":");
+				s.add_cmd($6);
 				if ($2 == "main")
 				{
-					cout << "li $v0, 10" << endl;
-					cout <<"syscall" << endl;
+					s.add_cmd("li $v0, 10");;
+					s.add_cmd("syscall");
 				}
 		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
 		   }
@@ -93,7 +100,7 @@ param_comma_list: param tcomma param_comma_list {
 param: type id {/*$$ = "(param "+$1+$2+")";*/}
 
 block: tlcb var_decl_list statement_list trcb {
-					/*$$ = "(block " + $1+$2+$3+$4+")";*/
+	 			$$ = $4;
 				}
 var_decl_list: var_decl var_decl_list {
 			 	/*$$ = "(var_decl_list " + $1+$2+")";*/
@@ -160,7 +167,7 @@ assign_comma_list: assign tcomma assign_comma_list {
 				 	/*$$ = "(assign_comma_list "+ $1+")";*/
 				 }
 assign:	lvalue tassign expr {
-	  		s.stack[s.sp].set_var($1, $3);
+	  		s.stack[s.sp].set_var($1, $3, s);
 			s.stack[s.sp].remove_slot($3);
 			$$ = $1;
 	  		/*$$ = "(assign " + $1+$2+$3+")";*/
@@ -179,10 +186,10 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 				{
 					for (int i = args_list.size() - 1; i >= 0 ; i--)
 					{
-						cout << p.print_int(args_list[i]) << endl;
-						if (i != 0)cout << p.print_str(" ") << endl;
+						s.add_cmd(p.print_int(args_list[i]));
+						if (i != 0) s.add_cmd(p.print_str(" "));
 					}
-					cout << p.print_str("\n") << endl;
+					s.add_cmd(p.print_str("\n"));
 					
 				}
 				else if ($1 == "print_str")
@@ -190,10 +197,10 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 					for (int i = args_list.size() - 1; i>= 0; i--)
 					{
 						string ret = add_str(args_list[i]);
-						cout <<  p.print_str(ret) << endl;
-						if (i != 0 )cout <<  p.print_str(" ") << endl;
+						s.add_cmd(p.print_str(ret));
+						s.add_cmd(p.print_str(" "));
 					}
-					cout << p.print_str("\n") << endl;
+					s.add_cmd(p.print_str("\n"));
 				}
 				args_list.clear();
 					/*$$ = "(callout_arg_list " + $1+$2+")";*/
@@ -232,7 +239,7 @@ opt_expr: expr{ /*$$ = "(opt_expr " + $1+ ")";*/}
 		| {/*$$ = "(opt_expr EPSILON)";*/}
 
 expr: lvalue {
-		$$ = s.stack[s.sp].get_var($1);
+		$$ = s.stack[s.sp].get_var($1,s);
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | method_call {
@@ -243,22 +250,22 @@ expr: lvalue {
 	  }
 	  | expr T_PLUS expr {
 	    string res = s.stack[s.sp].find_slot();
-	  	cout << "add $"<<res<<", $"<< $1<<", $"<< $3<< endl;
+	  	s.add_cmd("add $" + res + ", $" + $1 + ", $" +  $3);
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
 		$$ = res;
 	  }
 	  | expr T_MINUS expr {
 	  	string res = s.stack[s.sp].find_slot();
-	  	cout << "sub $"<<res<<", $"<< $1<<", $"<< $3<< endl;
+	  	s.add_cmd("sub $" + res + ", $" + $1 + ", $" + $3);
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
 		$$ = res;
 	  }
 	  | expr T_MULT expr {
 	  	string res = s.stack[s.sp].find_slot();
-		cout << "mult $"<< $1 <<", $" << $3 << endl;
-		cout << "mflo $"<< res<< endl;
+		s.add_cmd("mult $" + $1 + ", $" + $3);
+		s.add_cmd("mflo $" + res);
 
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
@@ -267,8 +274,8 @@ expr: lvalue {
 	  }
 	  | expr T_DIV expr {
 	  	string res = s.stack[s.sp].find_slot();
-		cout << "div $"<< $1 <<", $" << $3 << endl;
-		cout << "mflo $" << res << endl;
+		s.add_cmd("div $" + $1 + ", $" + $3);
+		s.add_cmd("mflo $" + res);
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
 		$$ = res;
@@ -276,8 +283,8 @@ expr: lvalue {
 	  }
 	  | expr T_MOD expr {	
 	    string res = s.stack[s.sp].find_slot();
-		cout << "div $"<< $1 <<", $" << $3 << endl;
-		cout << "mfhi $" << res << endl;
+		s.add_cmd("div $" + $1 + ", $" + $3);
+		s.add_cmd("mfhi $" + res);
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
 		$$ = res;
@@ -285,7 +292,7 @@ expr: lvalue {
 	  }
 
 	  | T_MINUS expr %prec T_UMINUS {
-	  	cout <<"sub $"<<$2 <<", $0, $"<<$2<< endl;
+	  	s.add_cmd("sub $" + $2 + ", $0, $" + $2);
 		$$ = $2;
 	  }
 	  | tnot expr {
@@ -320,7 +327,7 @@ constant: intconstant {
 			stringstream ss($1);
 			int value;
 			ss >> value;
-			$$ = s.stack[s.sp].new_value(value);
+			$$ = s.stack[s.sp].new_value(value, s);
 			/*$$ = "(constant "+$1+")";*/
 		}
 		|T_CHARCONSTANT {
@@ -330,10 +337,10 @@ constant: intconstant {
 			/*$$ = "(constant " + $1 + ")";*/
 		}
 bool_constant: T_TRUE {
-			 $$ = s.stack[s.sp].new_value(1);
+			 $$ = s.stack[s.sp].new_value(1,s);
 			 		/*$$ = "(bool_constant (T_TRUE "+$1+"))";*/}
 			|T_FALSE {
-					$$ = s.stack[s.sp].new_value(0);
+			 $$ = s.stack[s.sp].new_value(0,s);
 					/*$$ = "(bool_constant (T_FALSE "+$1+"))";*/}
 intconstant: T_INTCONSTANT { /*$$ = "(T_INTCONSTANT "+$1+")";*/}
 
@@ -370,7 +377,7 @@ tnew: T_NEW { /*$$ = "(T_NEW new)";*/ }
 tnot: T_NOT { /*$$ = "(T_NOT !)";*/ }
 tnull: T_NULL { /*$$ = "(T_NULL null)";*/ }
 tor: T_OR { /*$$ = "(T_OR or)";*/ }
-trcb: T_RCB { s.out();/*$$ = "(T_RCB })";*/ }
+trcb: T_RCB { $$ = s.out();/*$$ = "(T_RCB })";*/ }
 treturn: T_RETURN { /*$$ = "(T_RETURN return)";*/ }
 trightshift: T_RIGHTSHIFT { /*$$ = "(T_RIGHTSHIFT >>)";*/ }
 trot: T_ROT { /*$$ = "(T_ROT rot)";*/ }
@@ -419,13 +426,10 @@ int init()
 		cout <<"enter:" << endl;
 		cout <<".asciiz \"\\n\""<< endl;
 
-		cout << ".text"<< endl;
-		cout << ".globl main"<< endl;
-		cout << "main:"<< endl;
 
 }
 
-int end()
+int print_string_taget()
 {
 	for (int i = 0 ; i < string_record.size() ; i++)
 	{
@@ -442,7 +446,6 @@ int main()
 	try{
 		init();
 		yyparse();
-		end();
 	}
 	catch (const char *s)
 	{

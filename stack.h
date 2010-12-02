@@ -1,9 +1,11 @@
-
-#ifndef _MEMORY_H_
-#define _MEMORY_H_
+#ifndef _STACK_H_
+#define _STACK_H_
 
 #include "base.h"
 #include "define.h"
+#include "output.h"
+
+class Stack;
 
 class Memory
 {
@@ -28,5 +30,22 @@ class Memory
 		
 
 };
+
+class Stack
+{
+	public:
+		const static int max_size = 10000;
+		Stack();
+		int in();
+		string out();
+		int sp;
+		Memory stack[max_size];
+		Output output_stack[max_size];		
+		int add_cmd(string s, char split='\n');
+	private:
+		
+};
+
+
 
 #endif

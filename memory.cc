@@ -1,4 +1,4 @@
-#include "memory.h"
+#include "stack.h"
 
 Memory::Memory()
 {
@@ -32,10 +32,13 @@ string Memory::find_slot()
 	throw("register is full");
 }
 
-string Memory::new_value(int value)
+string Memory::new_value(int value, Stack &s)
 {
 	string name = this->find_slot();
-	cout << "li $" << name<<", " << value << endl;
+	stringstream ss;
+	ss << value;
+	string cmd = "li $" + name + ", " + ss.str();
+	s.add_cmd(cmd);
 	return name;
 }
 
@@ -54,7 +57,7 @@ int Memory::add_var(string name)
 	return 0;
 }
 
-int Memory::set_var(string name, string reg)
+int Memory::set_var(string name, string reg, Stack &s)
 {
 	this->map_it = this->vars.find(name);
 	if (this->map_it == this->vars.end())
@@ -64,12 +67,16 @@ int Memory::set_var(string name, string reg)
 	else
 	{
 		int step = this->step;
-		cout <<"sw $"<<reg<<", " << (*map_it).second*step+step<<"($sp)"<< endl;
+		stringstream ss;
+		ss <<  (*map_it).second*step+step;
+		string cmd = "sw $" + reg + ", " + ss.str() + "($sp)";
+		s.add_cmd(cmd);
+
 	}
 	return 0;
 }
 
-string Memory::get_var(string name)
+string Memory::get_var(string name, Stack &s)
 {
 	this->map_it = this->vars.find(name);
 	string reg;
@@ -81,12 +88,15 @@ string Memory::get_var(string name)
 	{
 		reg = this->find_slot();
 		int step = this->step;
-		cout <<"lw $"<<reg<<", " << (*map_it).second*step+step<<"($sp)"<< endl;
+		stringstream ss;
+		ss <<  (*map_it).second*step+step;
+		string cmd = "lw $" + reg + ", " + ss.str() + "($sp)";
+		s.add_cmd(cmd);
 	}
 	return reg;
 }
 
-int Memory::save_and_load(int flag)
+int Memory::save_and_load(int flag, Stack &s)
 {
 	string op;
 	if (flag == SAVE) 
@@ -99,49 +109,14 @@ int Memory::save_and_load(int flag)
 	while (this->set_it != this->regi.end())
 	{
 		cnt += step;
-		cout << op <<" $"<<(*set_it)<<", " << cnt <<"($sp)"<< endl;
+		stringstream ss;
+		ss<< cnt;
+		string cmd = op + " $" + (*set_it) + ", " + ss.str() + "($sp)";
+		s.add_cmd(cmd);
 		set_it++;
 	}
 	this->cnt = cnt;
 	return cnt;
-}
-
-
-Stack::Stack()
-{
-	this->sp = -1;
-}
-
-int Stack::in()
-{
-	if (this->sp >= this->max_size - 1)
-	{
-		throw("stack is full");
-	}
-	
-	if (this->sp >= 0)
-	{
-		this->stack[this->sp].save_and_load(SAVE);
-		cout <<"subu $sp, " << this->stack[this->sp].cnt << endl;
-	}
-	this->sp += 1;
-	return 0;
-}
-
-int Stack::out()
-{
-	if (this->sp < 0)
-	{
-		throw("stack is empty");
-	}
-
-	this->sp -= 1;
-	if (this->sp >= 0)
-	{
-		cout <<"addu $sp, " << this->stack[this->sp].cnt << endl;
-		this->stack[this->sp].save_and_load(LOAD);
-	}
-	return 0;
 }
 
 /*

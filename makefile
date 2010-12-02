@@ -1,21 +1,20 @@
 LEX = flex
 YYAC = bison
 CC = g++
+OPTION = 
 
-a:	lex.o parser.o memory.o print.o
-	$(CC) -o a lex.o parser.o memory.o print.o
+cpptargets = lex.o parser.o
+cctargets = stack.o memory.o print.o output.o
+target = a
 
-lex.o: lex.cpp parser.hpp
-	$(CC) -c lex.cpp
+all: $(target)
 
-parser.o: parser.cpp memory.h print.h
-	$(CC) -c parser.cpp  
+$(target): $(cpptargets) $(cctargets)
+	$(CC) -o a $(cpptargets) $(cctargets)
 
-memory.o: memory.cc
-	$(CC) -c memory.cc
+$(cpptargets): lex.cpp parser.hpp parser.cpp
 
-print.o: print.cc
-	$(CC) -c print.cc
+$(cctargets): memory.h stack.h
 
 lex.cpp: decaflex.l
 	$(LEX) -o lex.cpp decaflex.l
@@ -23,7 +22,12 @@ lex.cpp: decaflex.l
 parser.hpp: decaflex.y
 	$(YYAC) -oparser.cpp decaflex.y -d -t 
 
+test:
+	./$(target) < test1 > a.s 2> b.s
+
+run:
+	./run.sh
 
 clean:
-	rm *.hpp *.gch *.o a 
+	rm *.cpp *.hpp *.gch *.o a 
 
