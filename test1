@@ -8,6 +8,4 @@ class A {
 		callout("print_int", a, b);
 		callout("print_str", "Hello World");
 	}
-	int cat()
-	{}
 }

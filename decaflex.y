@@ -10,6 +10,7 @@
 	Stack s;
 	vector <string> args_list;
 	vector <string> string_record;
+	vector <string> id_list;
 %}
 %debug
 %code requires{
@@ -108,12 +109,20 @@ var_decl_list: var_decl var_decl_list {
 			 | {/*$$ = "(var_decl_list EPSILON)";*/}
 
 var_decl: type  id id_comma_list tsemicolon   {
-			int rt = s.stack[s.sp].add_var($2);
+			id_list.push_back($2);
+			for (int i = 0; i < id_list.size(); i++)
+			{
+				//cerr << id_list[i]<<endl;
+				int rt = s.stack[s.sp].add_var(id_list[i]);
+
+			}
+			id_list.clear();
 			/*$$ = "(var_decl "+$1+$2+$3+$4+")";*/
 		}
 
 id_comma_list: tcomma id id_comma_list {
-			int rt = s.stack[s.sp].add_var($2);
+			 id_list.push_back($2)
+
 			 		/*$$ = "(id_comma_list "+$1+$2+$3+")";*/}
 			   | {
 			   /*$$ =  "(id_comma_list EPSILON)";*/
@@ -157,6 +166,7 @@ statement:
 		 	/*$$ = "(statement "+$1+$2+")";*/
 		 }
 		 | block {
+		 	s.add_cmd($1);
 		 	/*$$ = "(statement "+$1+")";*/
 		 }
 
@@ -366,7 +376,9 @@ tfor: T_FOR { /*$$ = "(T_FOR for)";*/ }
 tgeq: T_GEQ { /*$$ = "(T_GEQ >=)";*/ }
 tgt: T_GT { /*$$ = "(T_GT >)";*/ }
 tif: T_IF { /*$$ = "(T_IF if)";*/ }
-tlcb: T_LCB { s.in();/*$$ = "(T_LCB {)";*/ }
+tlcb: T_LCB { s.in();
+			//cerr<<"SP: " << s.sp << endl;/*$$ = "(T_LCB {)";*/
+			}
 tleftshift: T_LEFTSHIFT { /*$$ = "(T_LEFTSHIFT <<)";*/ }
 tleq: T_LEQ { /*$$ = "(T_LEQ <=)";*/ }
 tlparen: T_LPAREN { /*$$ = "(T_LPAREN \\()";*/ }
@@ -414,6 +426,7 @@ string add_str(string s)
 int init()
 {
 		string_record.clear();
+		id_list.clear();
 
 		yydebug = 0;
 		args_list.clear();

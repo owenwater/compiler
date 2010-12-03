@@ -4,6 +4,7 @@ Memory::Memory()
 {
 	this->regi.clear();
 	this->vars.clear();
+	this->cnt = 0;
 }
 
 void Memory::remove_slot(string name)
@@ -59,40 +60,18 @@ int Memory::add_var(string name)
 
 int Memory::set_var(string name, string reg, Stack &s)
 {
-	this->map_it = this->vars.find(name);
-	if (this->map_it == this->vars.end())
-	{
-		throw("variable doesnt exist");
-	}
-	else
-	{
-		int step = this->step;
-		stringstream ss;
-		ss <<  (*map_it).second*step+step;
-		string cmd = "sw $" + reg + ", " + ss.str() + "($sp)";
-		s.add_cmd(cmd);
-
-	}
+	string pos = s.find_var(name);
+	string cmd = "sw $" + reg + ", " + pos + "($sp)";
+	s.add_cmd(cmd);
 	return 0;
 }
 
 string Memory::get_var(string name, Stack &s)
 {
-	this->map_it = this->vars.find(name);
-	string reg;
-	if (this->map_it == this->vars.end())
-	{
-		throw("variable doesnt exist");
-	}
-	else
-	{
-		reg = this->find_slot();
-		int step = this->step;
-		stringstream ss;
-		ss <<  (*map_it).second*step+step;
-		string cmd = "lw $" + reg + ", " + ss.str() + "($sp)";
-		s.add_cmd(cmd);
-	}
+	string pos = s.find_var(name);
+	string reg = this->find_slot();
+	string cmd = "lw $" + reg + ", " + pos + "($sp)";
+	s.add_cmd(cmd);
 	return reg;
 }
 
@@ -117,6 +96,13 @@ int Memory::save_and_load(int flag, Stack &s)
 	}
 	this->cnt = cnt;
 	return cnt;
+}
+
+int Memory::clear()
+{
+	this->regi.clear();
+	this->vars.clear();
+	this->cnt = 0;
 }
 
 /*

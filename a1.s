@@ -3,10 +3,13 @@ space:
 .asciiz " "
 enter:
 .asciiz "\n"
+str0:
+.asciiz "Hello World"
+
 .text
 .globl main
-main:
 subu $sp, 0
+main:
 li $t0, 1
 li $t1, 2
 li $t2, 3
@@ -47,8 +50,13 @@ li $v0, 4
 la $a0, str0
 syscall
 li $v0, 4
+la $a0, space
+syscall
+li $v0, 4
 la $a0, enter
 syscall
-str0:
-.asciiz "h"
+addu $sp, 0
+
+li $v0, 10
+syscall
 

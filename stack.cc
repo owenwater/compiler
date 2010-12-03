@@ -27,6 +27,7 @@ int Stack::in()
 
 string Stack::out()
 {
+	/*stack pop, return the commands in this levestack pop, return the commands in this levell*/
 	if (this->sp < 0)
 	{
 		throw("stack is empty");
@@ -46,6 +47,7 @@ string Stack::out()
 		
 		}
 		ret = this->output_stack[this->sp].get_cmd();
+		this->stack[this->sp].clear();
 	}
 	this->sp -= 1;
 	return ret;
@@ -56,5 +58,31 @@ int Stack::add_cmd(string s, char split)
 	//cerr << s<< endl;
 	int ret = this->output_stack[this->sp].add(s, split);
 	return ret;
+}
+
+string Stack::find_var(string name)
+{
+	int sp = this->sp + 1;
+	map<string, int>::iterator it;
+	int base = 0;
+	do
+	{
+		sp--;
+		if (sp < 0) throw("variable already exist");
+		if (sp < this->sp)
+			base += this->stack[sp].cnt;
+		it = this->stack[sp].vars.find(name);
+	}
+	while (it == this->stack[sp].vars.end());
+	int pos = base + (*it).second * Memory::step + Memory::step;
+	stringstream ss;
+	ss << pos;
+	//cerr << name <<": " << pos << endl;
+	//cerr << name << ": " << endl;
+	//cerr << this->sp <<", " << sp << endl;
+	//cerr << base <<", " << pos << endl;
+	//cerr <<ss.str() << endl;
+	//cerr << "===" << endl;
+	return ss.str();
 }
 
