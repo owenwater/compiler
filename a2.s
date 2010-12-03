@@ -32,6 +32,23 @@ la $a0, enter
 syscall
 addu $sp, 8
 
+subu $sp, 8
+lw $t0, 16($sp)
+lw $t1, 12($sp)
+move $a0, $t0
+li $v0, 1
+syscall
+li $v0, 4
+la $a0, space
+syscall
+move $a0, $t1
+li $v0, 1
+syscall
+li $v0, 4
+la $a0, enter
+syscall
+addu $sp, 8
+
 lw $t0, 8($sp)
 lw $t1, 4($sp)
 move $a0, $t0

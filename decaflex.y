@@ -7,10 +7,13 @@
 	void yyerror(const char *s);
 	string add_str(string s);
 	int print_string_taget();
+	string get_tag(int i, string s);
+	
 	Stack s;
 	vector <string> args_list;
 	vector <string> string_record;
 	vector <string> id_list;
+	int if_cnt, for_cnt;
 %}
 %debug
 %code requires{
@@ -145,6 +148,11 @@ statement:
 		 	/*$$ = "(statement "+$1+$2+")";*/
 		 }
 		 |tif tlparen expr trparen block {
+		 	if_cnt++;
+			string then  = get_tag(if_cnt, "then");
+			s.add_cmd(then);
+			string end   = get_tag(if_cnt, "end");
+		 	
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 }
 		 |tif tlparen expr trparen block telse block {
@@ -256,6 +264,7 @@ expr: lvalue {
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | constant {
+	  	$$ = $1;
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | expr T_PLUS expr {
@@ -344,6 +353,7 @@ constant: intconstant {
 			/*$$ = "(constant (T_CHARCONSTANT '"+$1+"'))";*/
 		}
 		|bool_constant {
+			$$ = $1;
 			/*$$ = "(constant " + $1 + ")";*/
 		}
 bool_constant: T_TRUE {
@@ -407,19 +417,19 @@ void yyerror(const char *s)
 	cerr << s << endl;
 }
 
-string get_tag(int i)
+string get_tag(int i, string s)
 {
 	stringstream ss;
 	ss << i;
 	string tag(ss.str());
-	tag = "str"+tag;
+	tag = s+tag;
 	return tag;
 }
 
 string add_str(string s)
 {
 	string_record.push_back(s);
-	string tag = get_tag(string_record.size() - 1);
+	string tag = get_tag(string_record.size() - 1, "str");
 	return tag;
 }
 
@@ -427,6 +437,8 @@ int init()
 {
 		string_record.clear();
 		id_list.clear();
+		if_cnt = -1;
+		for_cnt = -1;
 
 		yydebug = 0;
 		args_list.clear();
@@ -446,7 +458,7 @@ int print_string_taget()
 {
 	for (int i = 0 ; i < string_record.size() ; i++)
 	{
-		string tag = get_tag(i);
+		string tag = get_tag(i, "str");
 		cout << tag<<":" << endl;
 		cout <<".asciiz \""<< string_record[i] << "\""<< endl;
 		cout << endl;
