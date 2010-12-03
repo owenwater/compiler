@@ -2,19 +2,19 @@ class A {
 	
 	void main()
 	{
-		if (true)
+		if (true || false)
 		{
-			if (false)
+			if (false || true && false)
 			{
 				callout("print_str", "True");
 			}
 			else
 			{
-				if (true)
+				if (true && true || true && false)
 				{
 					callout("print_int", 1);
 				}
-				if (false)
+				if (false && false)
 				{
 					callout("print_int", 2);
 				}

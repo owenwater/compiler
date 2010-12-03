@@ -327,6 +327,20 @@ expr: lvalue {
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
 		$$ = res;
+	  }
+	  | expr T_AND expr {
+	  	string res = s.stack[s.sp].find_slot();
+	  	s.add_cmd("and $" + res + ", $" + $1 + ", $" + $3);
+		s.stack[s.sp].remove_slot($1);
+		s.stack[s.sp].remove_slot($3);
+		$$ = res;
+	  }
+	  | expr T_OR expr {
+	  	string res = s.stack[s.sp].find_slot();
+	  	s.add_cmd("or $" + res + ", $" + $1 + ", $" + $3);
+		s.stack[s.sp].remove_slot($1);
+		s.stack[s.sp].remove_slot($3);
+		$$ = res;
 
 	  }
 
@@ -334,8 +348,8 @@ expr: lvalue {
 	  	s.add_cmd("sub $" + $2 + ", $0, $" + $2);
 		$$ = $2;
 	  }
-	  | tnot expr {
-		/*$$ = "(expr " + $1+$2+")";*/
+	  | T_NOT expr {
+	  	
 	  }
 	  | tlparen expr trparen {
 	  $$ = $2;
@@ -345,7 +359,6 @@ expr: lvalue {
 bin_op: arith_op { $$ = $1;}
 	    |rel_op {/*$$ = $1;*/}
 	    |eq_op {/*$$ = $1;*/}
-	    |cond_op {/*$$ = $1;*/}
 
 arith_op:tleftshift {/*$$ = $1;*/}
 	    |trightshift {/*$$ = $1;*/}
@@ -359,8 +372,6 @@ rel_op : tgeq {/*$$ = $1;*/}
 eq_op : teq {/*$$ = $1;*/}
 	    |tneq {/*$$ = $1;*/}
 
-cond_op : tand {/*$$ = $1;*/}
-	    |tor {/*$$ = $1;*/}
 
 constant: intconstant {
 			stringstream ss($1);
