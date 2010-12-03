@@ -2,7 +2,11 @@ class A {
 	
 	void main()
 	{
-		if (true || false)
+		if (!true)
+		{
+			callout("print_int", 1);
+		}
+		if (!true || !false)
 		{
 			if (false || true && false)
 			{
@@ -14,7 +18,7 @@ class A {
 				{
 					callout("print_int", 1);
 				}
-				if (false && false)
+				if (!false && false)
 				{
 					callout("print_int", 2);
 				}

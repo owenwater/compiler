@@ -289,58 +289,58 @@ expr: lvalue {
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | expr T_PLUS expr {
-	    string res = s.stack[s.sp].find_slot();
-	  	s.add_cmd("add $" + res + ", $" + $1 + ", $" +  $3);
-		s.stack[s.sp].remove_slot($1);
+	    //string res = s.stack[s.sp].find_slot();
+	  	s.add_cmd("add $" + $1 + ", $" + $1 + ", $" +  $3);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 	  }
 	  | expr T_MINUS expr {
-	  	string res = s.stack[s.sp].find_slot();
-	  	s.add_cmd("sub $" + res + ", $" + $1 + ", $" + $3);
-		s.stack[s.sp].remove_slot($1);
+	  	//string res = s.stack[s.sp].find_slot();
+	  	s.add_cmd("sub $" + $1 + ", $" + $1 + ", $" + $3);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 	  }
 	  | expr T_MULT expr {
-	  	string res = s.stack[s.sp].find_slot();
-		s.add_cmd("mul $" + res + ", $"+ $1 + ", $" + $3);
+	  	//string res = s.stack[s.sp].find_slot();
+		s.add_cmd("mul $" + $1 + ", $"+ $1 + ", $" + $3);
 
-		s.stack[s.sp].remove_slot($1);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 
 	  }
 	  | expr T_DIV expr {
-	  	string res = s.stack[s.sp].find_slot();
+	  	//string res = s.stack[s.sp].find_slot();
 		s.add_cmd("div $" + $1 + ", $" + $3);
-		s.add_cmd("mflo $" + res);
-		s.stack[s.sp].remove_slot($1);
+		s.add_cmd("mflo $" + $1);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 
 	  }
 	  | expr T_MOD expr {	
-	    string res = s.stack[s.sp].find_slot();
+	    //string res = s.stack[s.sp].find_slot();
 		s.add_cmd("div $" + $1 + ", $" + $3);
-		s.add_cmd("mfhi $" + res);
-		s.stack[s.sp].remove_slot($1);
+		s.add_cmd("mfhi $" + $1);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 	  }
 	  | expr T_AND expr {
-	  	string res = s.stack[s.sp].find_slot();
-	  	s.add_cmd("and $" + res + ", $" + $1 + ", $" + $3);
-		s.stack[s.sp].remove_slot($1);
+	  	//string res = s.stack[s.sp].find_slot();
+	  	s.add_cmd("and $" + $1 + ", $" + $1 + ", $" + $3);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 	  }
 	  | expr T_OR expr {
-	  	string res = s.stack[s.sp].find_slot();
-	  	s.add_cmd("or $" + res + ", $" + $1 + ", $" + $3);
-		s.stack[s.sp].remove_slot($1);
+	  	//string res = s.stack[s.sp].find_slot();
+	  	s.add_cmd("or $" + $1 + ", $" + $1 + ", $" + $3);
+		//s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
-		$$ = res;
+		$$ = $1;
 
 	  }
 
@@ -349,6 +349,10 @@ expr: lvalue {
 		$$ = $2;
 	  }
 	  | T_NOT expr {
+	  	string tmp = s.stack[s.sp].new_value(1, s);
+		s.add_cmd("xor $"+$2+", $"+tmp+", $"+$2);
+		s.stack[s.sp].remove_slot(tmp);
+		$$ = $2;
 	  	
 	  }
 	  | tlparen expr trparen {

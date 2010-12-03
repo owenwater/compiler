@@ -14,8 +14,8 @@ li $t0, 3
 sw $t0, 4($sp)
 lw $t0, 4($sp)
 lw $t1, 4($sp)
-add $t2, $t0, $t1
-sw $t2, 12($sp)
+add $t0, $t0, $t1
+sw $t0, 12($sp)
 lw $t0, 4($sp)
 lw $t1, 12($sp)
 move $a0, $t0
