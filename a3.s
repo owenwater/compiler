@@ -17,7 +17,7 @@ li $t0, 1
 xori $t0, $t0, 1
 sw $t0, 4($sp)
 subu $sp, 4
-beq $t0, $zero, end0
+beq $t0, $zero, end_if0
 then0:
 li $t0, 1
 move $a0, $t0
@@ -29,7 +29,7 @@ syscall
 addu $sp, 4
 lw $t0, 4($sp)
 
-end0:
+end_if0:
 li $t1, 1
 xori $t1, $t1, 1
 li $t2, 0
@@ -66,7 +66,7 @@ syscall
 addu $sp, 4
 lw $t0, 4($sp)
 
-j end3
+j end_if3
 else3:
 li $t0, 1
 li $t1, 1
@@ -77,7 +77,7 @@ and $t1, $t1, $t2
 or $t0, $t0, $t1
 sw $t0, 4($sp)
 subu $sp, 4
-beq $t0, $zero, end1
+beq $t0, $zero, end_if1
 then1:
 li $t0, 1
 move $a0, $t0
@@ -89,7 +89,7 @@ syscall
 addu $sp, 4
 lw $t0, 4($sp)
 
-end1:
+end_if1:
 li $t1, 0
 xori $t1, $t1, 1
 li $t2, 0
@@ -97,7 +97,7 @@ and $t1, $t1, $t2
 sw $t0, 4($sp)
 sw $t1, 8($sp)
 subu $sp, 8
-beq $t1, $zero, end2
+beq $t1, $zero, end_if2
 then2:
 li $t0, 2
 move $a0, $t0
@@ -110,16 +110,16 @@ addu $sp, 8
 lw $t0, 4($sp)
 lw $t1, 8($sp)
 
-end2:
+end_if2:
 addu $sp, 4
 lw $t0, 4($sp)
 
-end3:
+end_if3:
 addu $sp, 8
 lw $t0, 4($sp)
 lw $t1, 8($sp)
 
-j end4
+j end_if4
 else4:
 li $v0, 4
 la $a0, str1
@@ -134,7 +134,7 @@ addu $sp, 8
 lw $t0, 4($sp)
 lw $t1, 8($sp)
 
-end4:
+end_if4:
 addu $sp, 0
 
 li $v0, 10
