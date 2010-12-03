@@ -1,5 +1,5 @@
-n=2
-for ((i=1;i<=2;i++))
+n=3
+for ((i=1;i<=n;i++))
 do
 	echo "Tesing $i... "
 	./a < test$i > a$i.s 2>err$i

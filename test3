@@ -1,0 +1,28 @@
+class A {
+	
+	void main()
+	{
+		if (true)
+		{
+			if (false)
+			{
+				callout("print_str", "True");
+			}
+			else
+			{
+				if (true)
+				{
+					callout("print_int", 1);
+				}
+				if (false)
+				{
+					callout("print_int", 2);
+				}
+			}
+		}
+		else
+		{
+			callout("print_str", "False");
+		}
+	}
+}

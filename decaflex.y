@@ -149,13 +149,34 @@ statement:
 		 }
 		 |tif tlparen expr trparen block {
 		 	if_cnt++;
-			string then  = get_tag(if_cnt, "then");
-			s.add_cmd(then);
-			string end   = get_tag(if_cnt, "end");
+			string then_tag  = get_tag(if_cnt, "then");
+			string end_tag   = get_tag(if_cnt, "end");
+			
+			string condition = $3;
+			s.add_cmd("beq $" + condition + ", $zero, "+ end_tag);
+
+			s.add_cmd(then_tag+":");
+			s.add_cmd($5);
+			s.add_cmd(end_tag+":");
 		 	
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 }
 		 |tif tlparen expr trparen block telse block {
+		 	if_cnt++;
+			string then_tag = get_tag(if_cnt, "then");
+			string else_tag = get_tag(if_cnt, "else");
+			string end_tag   = get_tag(if_cnt, "end");
+			
+			string condition = $3;
+			s.add_cmd("beq $" + condition + ", $zero, "+ else_tag);
+
+			s.add_cmd(then_tag+":");
+			s.add_cmd($5);
+			s.add_cmd("j " +  end_tag);
+			s.add_cmd(else_tag+":");
+			s.add_cmd($7);
+			s.add_cmd(end_tag+":");
+
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+$6+$7+")";*/
 		 }
 		 | twhile tlparen expr trparen block {
@@ -283,8 +304,7 @@ expr: lvalue {
 	  }
 	  | expr T_MULT expr {
 	  	string res = s.stack[s.sp].find_slot();
-		s.add_cmd("mult $" + $1 + ", $" + $3);
-		s.add_cmd("mflo $" + res);
+		s.add_cmd("mul $" + res + ", $"+ $1 + ", $" + $3);
 
 		s.stack[s.sp].remove_slot($1);
 		s.stack[s.sp].remove_slot($3);
