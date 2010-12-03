@@ -14,8 +14,7 @@ str1:
 subu $sp, 0
 main:
 li $t0, 1
-li $t1, 1
-xor $t0, $t1, $t0
+xori $t0, $t0, 1
 sw $t0, 4($sp)
 subu $sp, 4
 beq $t0, $zero, end0
@@ -32,11 +31,9 @@ lw $t0, 4($sp)
 
 end0:
 li $t1, 1
-li $t2, 1
-xor $t1, $t2, $t1
+xori $t1, $t1, 1
 li $t2, 0
-li $t3, 1
-xor $t2, $t3, $t2
+xori $t2, $t2, 1
 or $t1, $t1, $t2
 sw $t0, 4($sp)
 sw $t1, 8($sp)
@@ -94,8 +91,7 @@ lw $t0, 4($sp)
 
 end1:
 li $t1, 0
-li $t2, 1
-xor $t1, $t2, $t1
+xori $t1, $t1, 1
 li $t2, 0
 and $t1, $t1, $t2
 sw $t0, 4($sp)

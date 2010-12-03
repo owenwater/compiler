@@ -1,4 +1,4 @@
-n=3
+n=4
 for ((i=1;i<=n;i++))
 do
 	echo "Tesing $i... "

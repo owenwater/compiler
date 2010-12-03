@@ -349,24 +349,33 @@ expr: lvalue {
 		$$ = $2;
 	  }
 	  | T_NOT expr {
-	  	string tmp = s.stack[s.sp].new_value(1, s);
-		s.add_cmd("xor $"+$2+", $"+tmp+", $"+$2);
-		s.stack[s.sp].remove_slot(tmp);
+	  //	string tmp = s.stack[s.sp].new_value(1, s);
+		s.add_cmd("xori $"+$2+", $"+$2+", 1");
+	//	s.stack[s.sp].remove_slot(tmp);
 		$$ = $2;
 	  	
+	  }
+	  | expr T_LEFTSHIFT expr {
+	  	s.add_cmd("sllv $" + $1 + ", $" + $1 + ", $" + $3);
+		s.stack[s.sp].remove_slot($3);
+		$$ = $1;
+	  }
+	  | expr T_RIGHTSHIFT expr {
+	  	s.add_cmd("srlv $" + $1 + ", $" + $1 + ", $" + $3);
+		s.stack[s.sp].remove_slot($3);
+		$$ = $1;
+	  }
+	  | expr T_ROT expr {
+	  	$$ = $1;
+			  
 	  }
 	  | tlparen expr trparen {
 	  $$ = $2;
 		/*$$ = "(expr " + $1+$2+$3+")";*/
 	  }
 
-bin_op: arith_op { $$ = $1;}
-	    |rel_op {/*$$ = $1;*/}
+bin_op: rel_op {/*$$ = $1;*/}
 	    |eq_op {/*$$ = $1;*/}
-
-arith_op:tleftshift {/*$$ = $1;*/}
-	    |trightshift {/*$$ = $1;*/}
-	    |trot {/*$$ = $1;*/}
 
 rel_op : tgeq {/*$$ = $1;*/}
 	    |tgt {/*$$ = $1;*/}
