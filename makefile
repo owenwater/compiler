@@ -22,9 +22,6 @@ lex.cpp: decaflex.l
 parser.hpp: decaflex.y
 	$(YYAC) -oparser.cpp decaflex.y -d -t 
 
-test:
-	./$(target) < test1 > a.s 2> b.s
-
 run:
 	./run.sh
 
