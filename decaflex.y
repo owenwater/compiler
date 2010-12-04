@@ -9,11 +9,13 @@
 	int print_string_taget();
 	string get_tag(int i, string s);
 	string cmp_cmd(string op, string e1, string e2);
+	bool for_loop;
 	
 	Stack s;
 	vector <string> args_list;
 	vector <string> string_record;
 	vector <string> id_list;
+	string for_split = "@@";
 	
 	int if_cnt, loop_cnt, cmp_cnt;
 %}
@@ -185,7 +187,6 @@ statement:
 			s.add_cmd($7);
 			s.add_cmd(end_tag+":");
 
-		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+$6+$7+")";*/
 		 }
 		 | twhile tlparen expr trparen block {
 		 	loop_cnt++;
@@ -196,15 +197,38 @@ statement:
 			s.add_cmd(begin_tag+":");
 			s.add_cmd($4);
 			s.add_cmd("beq $" + condition + ", $zero, "+ end_tag);
-			s.stack[s.sp].remove_slot($3);
+			s.stack[s.sp].remove_slot(condition);
 			s.add_cmd($5);
 			s.add_cmd("j " + begin_tag);
 			s.add_cmd(end_tag+":");
 
-		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 }
-		 | tfor tlparen assign_comma_list tsemicolon expr tsemicolon assign_comma_list trparen block {
-		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+$6+$7+$8+")";*/
+		 | tfor tlparen for_first_part tsemicolon expr tsemicolon for_third_part trparen block {
+			loop_cnt++;
+			string begin_tag = get_tag(loop_cnt, "for_begin");
+			string end_tag   = get_tag(loop_cnt, "for_end");
+
+			string loop = $8;
+			string condition = $5;
+
+			string cmd[3];
+			for (int i = 0; i < 2; i++)
+			{
+				int index;
+				index = loop.find(for_split);
+				cmd[i] = loop.substr(0,index);
+				loop = loop.substr(index+2);
+			}
+			cmd[2] = loop;
+			s.add_cmd(cmd[0]);
+			s.add_cmd(begin_tag + ":");
+			s.add_cmd(cmd[1]);
+			s.add_cmd("beq $" + condition + ", $zero, "+ end_tag);
+			s.stack[s.sp].remove_slot(condition);
+			s.add_cmd($9);
+			s.add_cmd(cmd[2]);
+			s.add_cmd("j "+begin_tag);
+			s.add_cmd(end_tag+":");
 		 }
 		 | treturn opt_expr tsemicolon {
 		 	/*$$ = "(statement "+$1+$2+$3+")";*/
@@ -219,6 +243,12 @@ statement:
 		 	s.add_cmd($1);
 		 	/*$$ = "(statement "+$1+")";*/
 		 }
+for_first_part: assign_comma_list {
+			  for_loop = true;
+			  }
+for_third_part: assign_comma_list {
+			  for_loop = false;
+			  }
 
 assign_comma_list: assign tcomma assign_comma_list {
 				 	/*$$ = "(assign_comma_list "+$1+$2+$3+")";*/
@@ -446,7 +476,7 @@ tcomma: T_COMMA { /*$$ = "(T_COMMA ,)";*/ }
 tcontinue: T_CONTINUE { /*$$ = "(T_CONTINUE continue)";*/ }
 tdot: T_DOT { /*$$ = "(T_DOT .)";*/ }
 telse: T_ELSE { /*$$ = "(T_ELSE else)";*/ }
-textends: T_EXTENDS { /*$$ = "(T_EXTENDS extends)";*/ }
+textends: T_EXTENDS { /*$$ = "(T_EXTENDS extends)";*/ }	//cerr << cmd[0]
 tfor: T_FOR { /*$$ = "(T_FOR for)";*/ }
 tif: T_IF { /*$$ = "(T_IF if)";*/ }
 tlcb: T_LCB { s.in();
@@ -462,7 +492,12 @@ treturn: T_RETURN { /*$$ = "(T_RETURN return)";*/ }
 trot: T_ROT { /*$$ = "(T_ROT rot)";*/ }
 trparen: T_RPAREN {$$ = s.output_out(); /*$$ = "(T_RPAREN \\))";*/ }
 trsb: T_RSB { /*$$ = "(T_RSB ])";*/ }
-tsemicolon: T_SEMICOLON { /*$$ = "(T_SEMICOLON ;)";*/ }
+tsemicolon: T_SEMICOLON { 
+		  if (for_loop)
+		  {
+		  	s.add_cmd(for_split);
+		  }
+		  /*$$ = "(T_SEMICOLON ;)";*/ }
 twhile: T_WHILE { /*$$ = "(T_WHILE while)";*/ }
 
 	
@@ -514,6 +549,8 @@ int init()
 		if_cnt = -1;
 		loop_cnt = -1;
 		cmp_cnt = -1;
+
+		for_loop = false;
 
 		yydebug = 0;
 		args_list.clear();

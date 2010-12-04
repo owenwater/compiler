@@ -1,0 +1,17 @@
+class A {
+	
+	void main()
+	{
+		int i, j;
+		for (i = 0; i < 10; i = i + 1)
+		{
+			int a;
+			a = 1;
+			for (j = 1; j <= i; j = j + 1)
+			{
+				a = a * j;
+			}
+			callout("print_int", i, a);
+		}
+	}
+}
