@@ -5,7 +5,7 @@ enter:
 .asciiz "\n"
 .text
 .globl main
-main:
+main: 
 
 subu $sp, 0
 li $v0, 5

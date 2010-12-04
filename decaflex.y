@@ -48,6 +48,7 @@ program: tclass class_name tlcb field_decl_list method_decl_list trcb {
 			print_string_taget();
 			cout << ".text"<< endl;
 			cout << ".globl main"<< endl;
+			cout << "main: " << endl;
 			cout << $6 << endl;
 	   		//cout <<"(program "<<$1 << $2 << $3<<$4;
 			//cout << $5 << $6<< ")" <<endl;
@@ -60,16 +61,25 @@ field_decl_list: field_decl_list field_decl {
 			   }
 			 	| { /*$$ = "(field_decl_list EPSILON)";*/}
 field_decl: type field_list {
-		  			/*$$ = "(field_decl "+$1 + $2 + ")";*/
-		       }
+
+		  int i;
+		  for (i = id_list.size() - 1; i >= 0; i--)
+		  {
+		  	 int rt = s.stack[s.sp].add_var(id_list[i]);
+		  }
+		  id_list.clear();
+		  }
 		   |type id T_ASSIGN constant tsemicolon{
+		   	int rt = s.stack[s.sp].add_var($2);
+			s.stack[s.sp].set_var($2, $4, s);
+			s.stack[s.sp].remove_slot($4);
 		   			/*$$ = "(field_decl "+$1+$2+$3+$4+$5+")";*/
 		   	   }
 field_list: field tcomma field_list {
-		  		/*$$ = "(field_list " +$1+ $2 + $3 +")";*/
-		    }
+		  }
 			| field tsemicolon {/*$$ = "(field_list "+$1+$2+")";*/}
 field:  id {
+		id_list.push_back($1);
 				/*$$ = "(field "+ $1 + ")";*/
 			}
 	    | id tlsb T_INTCONSTANT trsb  {
@@ -88,7 +98,8 @@ method_decl: type id tlparen param_list trparen block{
 		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
 		   }
 		    | tvoid id tlparen param_list trparen block{
-		   		s.add_cmd($2 + ":");
+				if ($2 != "main")
+		   			s.add_cmd($2 + ":");
 		   		s.add_cmd($5);
 				s.add_cmd($6);
 				if ($2 == "main")

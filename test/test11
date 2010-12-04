@@ -1,0 +1,13 @@
+class A {
+	int a = 3;
+	int b;
+	void main()
+	{
+		b = 4;
+		callout("print_int", a ,b);
+		{
+			a = 5;
+			callout("print_int", a ,b);
+		}
+	}
+}

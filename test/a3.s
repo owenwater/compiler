@@ -11,7 +11,7 @@ str1:
 
 .text
 .globl main
-main:
+main: 
 
 subu $sp, 0
 li $t0, 1
