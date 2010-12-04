@@ -65,7 +65,21 @@ field_decl: type field_list {
 		  int i;
 		  for (i = id_list.size() - 1; i >= 0; i--)
 		  {
-		  	 int rt = s.stack[s.sp].add_var(id_list[i]);
+		  	int len = id_list[i].length();
+		  	if (id_list[i][len - 1] != ']')
+			{
+				int rt = s.stack[s.sp].add_var(id_list[i]);
+			}
+			else
+			{
+				int index = id_list[i].find('[');
+				string id = id_list[i].substr(0, index);
+				stringstream ss(id_list[i].substr(index +1 
+				                        , len - index - 2));
+				int l;
+				ss >> l;
+				int rt = s.stack[s.sp].add_var(id, l);
+			}
 		  }
 		  id_list.clear();
 		  }
@@ -83,6 +97,7 @@ field:  id {
 				/*$$ = "(field "+ $1 + ")";*/
 			}
 	    | id tlsb T_INTCONSTANT trsb  {
+		 id_list.push_back($1+"["+ $3+"]");
 		 		/*$$ = "(field "+ $1+$2+$3+$4+")";*/
 		    }
 
@@ -275,7 +290,18 @@ assign_comma_list: assign tcomma assign_comma_list {
 				 	/*$$ = "(assign_comma_list "+ $1+")";*/
 				 }
 assign:	lvalue T_ASSIGN expr {
-	  		s.stack[s.sp].set_var($1, $3, s);
+			int len = $1.length();
+			if ($1[len-1] == ']')
+			{
+				int i = $1.find('[');
+				s.stack[s.sp].set_var($1.substr(0,i), $3,  s, 
+									  $1.substr(i+1, len - i - 2));
+			}
+			else
+			{
+	  			s.stack[s.sp].set_var($1, $3, s);
+			}
+			
 			s.stack[s.sp].remove_slot($3);
 			//cerr << $1 <<",  " <<$3 << endl;
 			$$ = $1;
@@ -348,6 +374,7 @@ method_name: id {/*$$ = $1;*/}
 
 lvalue: id { $$ = $1;/*$$ = "(lvalue " + $1 + ")";*/}
 	  | id tlsb expr trsb {
+	    $$ = $1 + "[" + $3 +"]";
 	  	/*$$ = "(lvalue " + $1+$2+$3+$4+ ")";*/
 	  }
 
@@ -362,7 +389,17 @@ opt_expr: expr{ /*$$ = "(opt_expr " + $1+ ")";*/}
 		| {/*$$ = "(opt_expr EPSILON)";*/}
 
 expr: lvalue {
-		$$ = s.stack[s.sp].get_var($1,s);
+		int len = $1.length();
+		if ($1[len-1] == ']')
+		{
+			int i = $1.find('[');
+			$$ = s.stack[s.sp].get_var($1.substr(0,i), s, 
+									   $1.substr(i+1, len - i - 2));
+		}
+		else
+		{
+			$$ = s.stack[s.sp].get_var($1,s);
+		}
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | method_call {
@@ -376,6 +413,7 @@ expr: lvalue {
 	  | expr T_PLUS expr {
 	  	s.add_cmd("add $" + $1 + ", $" + $1 + ", $" +  $3);
 		s.stack[s.sp].remove_slot($3);
+
 		$$ = $1;
 	  }
 	  | expr T_MINUS expr {

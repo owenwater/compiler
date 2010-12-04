@@ -1,0 +1,75 @@
+Author  : Owen min (zmin@sfu.ca)
+ID	    : 301118996
+Version : 0.4
+Webpage : https://github.com/owenwater/compiler
+
+Get the lastest version by:
+git clone git://github.com/owenwater/compiler.git
+
+Compile and Install:
+	make
+
+Run my own test cases:
+	./run.sh
+All my test cases are put in the directory "test"
+For each test case, there are:
+	decafe source : test[i]
+	MIPS code     : a[i].s
+	error msg     : err[i]
+
+Run other decafe source:
+	./decafcc [file-name]
+	the MIPS code will be put into [file-name].o
+
+Current Feature:
+	0) global variable and array global declare and initialize (in stack)
+	1) all method declare, "void main" shall be first
+	2) block nested
+	3) local variable declare (in stack)
+	4) statements including:
+		4.0) assignment
+		4.1) if-then, if-then-else
+		4.2) while
+		4.3) for
+		4.4) break
+		4.5) continue
+	   except:
+	    4.a) return
+	5) system method call including:
+		5.0) print_int
+		5.1) print_str
+			print_int and print str accept several argument,
+			separate by space and end with newline character.
+			Just like print in Python
+			e.g.
+				"callout("print_int", 2,3,4);"
+				will output:
+				2 3 4
+				and a '\n'
+		5.2) read_int
+	6) expression including:
+		6.0) left value (an id or one slot of an array)
+		6.1) method call
+		6.3) plus, minus, multiply, div, mod, negate,
+		     and, or, not, leftshift, rightshift,
+			 less, less or equal, larger,  larger or equal
+			 equal, not equal
+		6.4) paren
+	  except:
+	    6.a) rot
+	7) constant including:
+		7.0) int 
+		7.0) bool 
+		7.0) char 
+		7.0) string
+
+TODO List:
+	0) call user function and return(4.a)
+	1) rot(6.a)
+	2) type check
+	3) "void main" function check
+
+
+
+
+

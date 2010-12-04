@@ -5,6 +5,7 @@ Memory::Memory()
 	this->regi.clear();
 	this->vars.clear();
 	this->cnt = 0;
+	this->num = 0;
 }
 
 void Memory::remove_slot(string name)
@@ -50,7 +51,7 @@ int Memory::add_slot(string name)
 	}
 }
 
-string Memory::new_value(int value, Stack &s)
+string Memory::new_value(int value, Stack &s )
 {
 	string name = this->find_slot();
 	stringstream ss;
@@ -60,7 +61,7 @@ string Memory::new_value(int value, Stack &s)
 	return name;
 }
 
-int Memory::add_var(string name)
+int Memory::add_var(string name, int len )
 {
 	this->map_it = this->vars.find(name);
 	if (this->map_it != this->vars.end())
@@ -69,26 +70,46 @@ int Memory::add_var(string name)
 	}
 	else
 	{
-		int num = vars.size();
-		vars[name] = num;
+		vars[name] = this->num;
+		this->num += len;
 	}
 	return 0;
 }
 
-int Memory::set_var(string name, string reg, Stack &s)
+int Memory::set_var(string name, string reg, Stack &s, string move  )
 {
 	string pos = s.find_var(name);
+	if (move != "")
+	{
+		s.add_cmd("sll $" +  move + ", $" + move + ", 2");
+		s.add_cmd("add $sp, $sp, $" +  move);
+	}
 	string cmd = "sw $" + reg + ", " + pos + "($sp)";
 	s.add_cmd(cmd);
+	if (move != "")
+	{
+		s.add_cmd("sub $sp, $sp, $" + move);
+		this->remove_slot(move);
+	}
 	return 0;
 }
 
-string Memory::get_var(string name, Stack &s)
+string Memory::get_var(string name, Stack &s, string move )
 {
 	string pos = s.find_var(name);
 	string reg = this->find_slot();
+	if (move != "")
+	{
+		s.add_cmd("sll $" +  move + ", $" + move + ", 2");
+		s.add_cmd("add $sp, $sp, $" + move);
+	}
 	string cmd = "lw $" + reg + ", " + pos + "($sp)";
 	s.add_cmd(cmd);
+	if (move != "")
+	{
+		s.add_cmd("sub $sp, $sp, $" + move);
+		this->remove_slot(move);
+	}
 	return reg;
 }
 
@@ -101,7 +122,7 @@ int Memory::save_and_load(int flag, Stack &s)
 		op = "lw";
 	this->set_it = this->regi.begin();
 	int step = this->step;
-	int cnt = this->vars.size() * step;
+	int cnt = this->num * step;
 	while (this->set_it != this->regi.end())
 	{
 		cnt += step;

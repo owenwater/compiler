@@ -130,7 +130,7 @@ string Stack::find_var(string name)
 		it = this->stack[sp].vars.find(name);
 	}
 	while (it == this->stack[sp].vars.end());
-	int pos = base + (*it).second * Memory::step + Memory::step;
+	int pos = base + ((*it).second)* Memory::step + Memory::step;
 	stringstream ss;
 	ss << pos;
 	//cerr << name <<": " << pos << endl;
