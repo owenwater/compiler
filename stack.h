@@ -42,16 +42,27 @@ class Stack
 		Stack();
 		int in();
 		string out();
+		
 		Memory stack[max_size];
 		Output output_stack[max_size];		
+		int loop_stack[max_size];
+		int loop_pos[max_size];
+		
+
+
 		int add_cmd(string s, char split='\n');
 		string find_var(string name);
 
 		int output_in();
 		string output_out();
 
+		int loop_in(int tag_num);
+		int loop_out();
+		int current_loop(int &pos);
+
 		int sp;
 		int output_sp;
+		int loop_sp;
 		
 	private:
 		

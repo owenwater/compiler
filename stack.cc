@@ -4,6 +4,7 @@ Stack::Stack()
 {
 	this->sp = -1;
 	this->output_sp = -1;
+	this->loop_sp = -1;
 }
 
 int Stack::in()
@@ -65,6 +66,7 @@ int Stack::output_in()
 		throw("stack is full");
 	}
 	this->output_sp += 1;
+	return 0;
 }
 
 string Stack::output_out()
@@ -77,6 +79,36 @@ string Stack::output_out()
 	this->output_sp -= 1;
 	return ret;
 }
+
+int Stack::loop_in(int tag_num)
+{	
+	if (this-> loop_sp >= this->max_size - 1)
+	{
+		throw("stack is full");
+	}
+	this->loop_sp += 1;
+	this->loop_stack[this->loop_sp] = tag_num;
+	this->loop_pos  [this->loop_sp] = this->sp;
+	return 0;
+}
+
+int Stack::loop_out()
+{
+	if (this->loop_sp < 0)
+	{
+		throw("stack is empty");
+	}
+	this->loop_sp -= 1;
+	return 0;
+}
+
+int Stack::current_loop(int &pos)
+{
+	pos = this->loop_pos[this->loop_sp];
+	return this->loop_stack[this->loop_sp];
+}
+
+
 int Stack::add_cmd(string s, char split)
 {
 	//cerr << s<< endl;

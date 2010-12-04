@@ -9,6 +9,8 @@
 	int print_string_taget();
 	string get_tag(int i, string s);
 	string cmp_cmd(string op, string e1, string e2);
+	int loop_op(string op);
+	
 	bool for_loop;
 	
 	Stack s;
@@ -181,6 +183,7 @@ statement:
 			s.stack[s.sp].remove_slot($3);
 
 			s.add_cmd(then_tag+":");
+
 			s.add_cmd($5);
 			s.add_cmd("j " +  end_tag);
 			s.add_cmd(else_tag+":");
@@ -190,8 +193,8 @@ statement:
 		 }
 		 | twhile tlparen expr trparen block {
 		 	loop_cnt++;
-			string begin_tag = get_tag(loop_cnt, "while_begin");
-			string end_tag = get_tag(loop_cnt, "while_end");
+			string begin_tag = get_tag(loop_cnt, "loop_begin");
+			string end_tag = get_tag(loop_cnt, "loop_end");
 			
 			string condition = $3;
 			s.add_cmd(begin_tag+":");
@@ -201,12 +204,14 @@ statement:
 			s.add_cmd($5);
 			s.add_cmd("j " + begin_tag);
 			s.add_cmd(end_tag+":");
+			s.loop_out();
 
 		 }
 		 | tfor tlparen for_first_part tsemicolon expr tsemicolon for_third_part trparen block {
 			loop_cnt++;
 			string begin_tag = get_tag(loop_cnt, "for_begin");
-			string end_tag   = get_tag(loop_cnt, "for_end");
+			string update_tag = get_tag(loop_cnt, "loop_begin");
+			string end_tag   = get_tag(loop_cnt, "loop_end");
 
 			string loop = $8;
 			string condition = $5;
@@ -226,18 +231,20 @@ statement:
 			s.add_cmd("beq $" + condition + ", $zero, "+ end_tag);
 			s.stack[s.sp].remove_slot(condition);
 			s.add_cmd($9);
+			s.add_cmd(update_tag+":");
 			s.add_cmd(cmd[2]);
 			s.add_cmd("j "+begin_tag);
 			s.add_cmd(end_tag+":");
+			s.loop_out();
 		 }
 		 | treturn opt_expr tsemicolon {
 		 	/*$$ = "(statement "+$1+$2+$3+")";*/
 		 }
 		 | tbreak tsemicolon {
-		 	/*$$ = "(statement "+$1+$2+")";*/
+		 	loop_op("loop_end");
 		 }
 		 | tcontinue tsemicolon {
-		 	/*$$ = "(statement "+$1+$2+")";*/
+		 	loop_op("loop_begin");
 		 }
 		 | block {
 		 	s.add_cmd($1);
@@ -477,7 +484,9 @@ tcontinue: T_CONTINUE { /*$$ = "(T_CONTINUE continue)";*/ }
 tdot: T_DOT { /*$$ = "(T_DOT .)";*/ }
 telse: T_ELSE { /*$$ = "(T_ELSE else)";*/ }
 textends: T_EXTENDS { /*$$ = "(T_EXTENDS extends)";*/ }	//cerr << cmd[0]
-tfor: T_FOR { /*$$ = "(T_FOR for)";*/ }
+tfor: T_FOR {
+	s.loop_in(loop_cnt + 1);
+	}
 tif: T_IF { /*$$ = "(T_IF if)";*/ }
 tlcb: T_LCB { s.in();
 			//cerr<<"SP: " << s.sp << endl;/*$$ = "(T_LCB {)";*/
@@ -497,8 +506,10 @@ tsemicolon: T_SEMICOLON {
 		  {
 		  	s.add_cmd(for_split);
 		  }
-		  /*$$ = "(T_SEMICOLON ;)";*/ }
-twhile: T_WHILE { /*$$ = "(T_WHILE while)";*/ }
+		  }
+twhile: T_WHILE { 
+	  s.loop_in(loop_cnt + 1);
+	  }
 
 	
 %%
@@ -508,6 +519,26 @@ void yyerror(const char *s)
 	string msg(s);
 	cerr << s << endl;
 }
+
+int loop_op(string op)
+{
+	int pos;
+	string tag = get_tag(s.current_loop(pos), op);
+	int cnt = 0;
+	int i;
+	for (i = s.sp-1; i >= pos; i--)
+	{
+		cnt += s.stack[i].cnt;
+	}
+	stringstream ss;
+	ss << cnt;
+	string cmd = "addu $sp, " + ss.str();
+	s.add_cmd(cmd);
+	s.stack[pos].save_and_load(LOAD, s);
+	s.add_cmd("j " + tag );
+
+}
+
 
 string get_tag(int i, string s)
 {

@@ -1,5 +1,5 @@
 b=1
-n=9
+n=10
 test_dir=test
 for ((i=b;i<=n;i++))
 do
