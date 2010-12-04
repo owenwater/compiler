@@ -37,7 +37,7 @@ class Memory
 class Stack
 {
 	public:
-		const static int max_size = 10000;
+		const static int max_size = 30000;
 		
 		Stack();
 		int in();
@@ -47,7 +47,11 @@ class Stack
 		int add_cmd(string s, char split='\n');
 		string find_var(string name);
 
+		int output_in();
+		string output_out();
+
 		int sp;
+		int output_sp;
 		
 	private:
 		

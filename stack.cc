@@ -3,6 +3,7 @@
 Stack::Stack()
 {
 	this->sp = -1;
+	this->output_sp = -1;
 }
 
 int Stack::in()
@@ -22,6 +23,7 @@ int Stack::in()
 		this->add_cmd(cmd);
 	}
 	this->sp += 1;
+	this->output_sp += 1;
 	return 0;
 }
 
@@ -46,17 +48,30 @@ string Stack::out()
 			this->stack[(this->sp) - 1].save_and_load(LOAD, (*this));
 		
 		}
-		ret = this->output_stack[this->sp].get_cmd();
+		ret = this->output_stack[this->output_sp].get_cmd();
 		this->stack[this->sp].clear();
 	}
 	this->sp -= 1;
+	this->output_sp -= 1;
 	return ret;
 }
 
+
+int Stack::output_in()
+{
+	this->output_sp += 1;
+}
+
+string Stack::output_out()
+{
+	string ret = this->output_stack[this->output_sp].get_cmd();
+	this->output_sp -= 1;
+	return ret;
+}
 int Stack::add_cmd(string s, char split)
 {
 	//cerr << s<< endl;
-	int ret = this->output_stack[this->sp].add(s, split);
+	int ret = this->output_stack[this->output_sp].add(s, split);
 	return ret;
 }
 
