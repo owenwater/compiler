@@ -8,7 +8,8 @@ Stack::Stack()
 
 int Stack::in()
 {
-	if (this->sp >= this->max_size - 1)
+	if (this-> sp        >= this->max_size - 1 
+	 || this-> output_sp >= this->max_size - 1)
 	{
 		throw("stack is full");
 	}
@@ -30,7 +31,7 @@ int Stack::in()
 string Stack::out()
 {
 	/*stack pop, return the commands in this levestack pop, return the commands in this levell*/
-	if (this->sp < 0)
+	if (this->sp < 0 || this->output_sp < 0)
 	{
 		throw("stack is empty");
 	}
@@ -59,11 +60,19 @@ string Stack::out()
 
 int Stack::output_in()
 {
+	if (this-> output_sp >= this->max_size - 1)
+	{
+		throw("stack is full");
+	}
 	this->output_sp += 1;
 }
 
 string Stack::output_out()
 {
+	if ( this->output_sp < 0)
+	{
+		throw("stack is empty");
+	}
 	string ret = this->output_stack[this->output_sp].get_cmd();
 	this->output_sp -= 1;
 	return ret;
