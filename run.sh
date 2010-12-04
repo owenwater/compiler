@@ -1,5 +1,6 @@
-n=6
-for ((i=1;i<=n;i++))
+b=1
+n=8
+for ((i=b;i<=n;i++))
 do
 	echo "Tesing $i... "
 	./a < test$i > a$i.s 2>err$i

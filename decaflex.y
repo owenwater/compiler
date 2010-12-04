@@ -79,11 +79,13 @@ method_decl_list: method_decl_list method_decl {
 				/*$$ = "";*/}
 method_decl: type id tlparen param_list trparen block{
 		   		s.add_cmd($2 + ":");
+		   		s.add_cmd($5);
 				s.add_cmd($6);
 		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
 		   }
 		    | tvoid id tlparen param_list trparen block{
 		   		s.add_cmd($2 + ":");
+		   		s.add_cmd($5);
 				s.add_cmd($6);
 				if ($2 == "main")
 				{
@@ -154,8 +156,10 @@ statement:
 			string then_tag  = get_tag(if_cnt, "then");
 			string end_tag   = get_tag(if_cnt, "end_if");
 			
+			s.add_cmd($4);
 			string condition = $3;
 			s.add_cmd("beq $" + condition + ", $zero, "+ end_tag);
+			s.stack[s.sp].remove_slot($3);
 
 			s.add_cmd(then_tag+":");
 			s.add_cmd($5);
@@ -169,8 +173,10 @@ statement:
 			string else_tag = get_tag(if_cnt, "else");
 			string end_tag   = get_tag(if_cnt, "end_if");
 			
+			s.add_cmd($4);
 			string condition = $3;
 			s.add_cmd("beq $" + condition + ", $zero, "+ else_tag);
+			s.stack[s.sp].remove_slot($3);
 
 			s.add_cmd(then_tag+":");
 			s.add_cmd($5);
@@ -182,6 +188,19 @@ statement:
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+$6+$7+")";*/
 		 }
 		 | twhile tlparen expr trparen block {
+		 	loop_cnt++;
+			string begin_tag = get_tag(loop_cnt, "while_begin");
+			string end_tag = get_tag(loop_cnt, "while_end");
+			
+			string condition = $3;
+			s.add_cmd(begin_tag+":");
+			s.add_cmd($4);
+			s.add_cmd("beq $" + condition + ", $zero, "+ end_tag);
+			s.stack[s.sp].remove_slot($3);
+			s.add_cmd($5);
+			s.add_cmd("j " + begin_tag);
+			s.add_cmd(end_tag+":");
+
 		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 }
 		 | tfor tlparen assign_comma_list tsemicolon expr tsemicolon assign_comma_list trparen block {
@@ -210,6 +229,7 @@ assign_comma_list: assign tcomma assign_comma_list {
 assign:	lvalue T_ASSIGN expr {
 	  		s.stack[s.sp].set_var($1, $3, s);
 			s.stack[s.sp].remove_slot($3);
+			//cerr << $1 <<",  " <<$3 << endl;
 			$$ = $1;
 	  		/*$$ = "(assign " + $1+$2+$3+")";*/
 	  	}
@@ -218,6 +238,7 @@ method_call: method_name tlparen expr_comma_list trparen {
 				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			}
 			| tcallout tlparen callout_arg_list trparen {
+			s.add_cmd($4);
 			$$ = $3;
 				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			}
@@ -389,6 +410,7 @@ expr: lvalue {
 	  }
 
 	  | tlparen expr trparen {
+	  s.add_cmd($3);
 	  $$ = $2;
 		/*$$ = "(expr " + $1+$2+$3+")";*/
 	  }
@@ -430,7 +452,7 @@ tif: T_IF { /*$$ = "(T_IF if)";*/ }
 tlcb: T_LCB { s.in();
 			//cerr<<"SP: " << s.sp << endl;/*$$ = "(T_LCB {)";*/
 			}
-tlparen: T_LPAREN { /*$$ = "(T_LPAREN \\()";*/ }
+tlparen: T_LPAREN {s.output_in(); /*$$ = "(T_LPAREN \\()";*/ }
 tlsb: T_LSB { /*$$ = "(T_LSB [)";*/ }
 tlt: T_LT { /*$$ = "(T_LT <)";*/ }
 tnew: T_NEW { /*$$ = "(T_NEW new)";*/ }
@@ -438,7 +460,7 @@ tnull: T_NULL { /*$$ = "(T_NULL null)";*/ }
 trcb: T_RCB { $$ = s.out();/*$$ = "(T_RCB })";*/ }
 treturn: T_RETURN { /*$$ = "(T_RETURN return)";*/ }
 trot: T_ROT { /*$$ = "(T_ROT rot)";*/ }
-trparen: T_RPAREN { /*$$ = "(T_RPAREN \\))";*/ }
+trparen: T_RPAREN {$$ = s.output_out(); /*$$ = "(T_RPAREN \\))";*/ }
 trsb: T_RSB { /*$$ = "(T_RSB ])";*/ }
 tsemicolon: T_SEMICOLON { /*$$ = "(T_SEMICOLON ;)";*/ }
 twhile: T_WHILE { /*$$ = "(T_WHILE while)";*/ }

@@ -5,8 +5,9 @@ enter:
 .asciiz "\n"
 .text
 .globl main
-subu $sp, 0
 main:
+
+subu $sp, 0
 li $t0, 2
 sw $t0, 8($sp)
 subu $sp, 8
@@ -30,6 +31,7 @@ syscall
 li $v0, 4
 la $a0, enter
 syscall
+
 addu $sp, 8
 
 subu $sp, 8
@@ -47,6 +49,7 @@ syscall
 li $v0, 4
 la $a0, enter
 syscall
+
 addu $sp, 8
 
 lw $t0, 8($sp)
@@ -63,6 +66,7 @@ syscall
 li $v0, 4
 la $a0, enter
 syscall
+
 addu $sp, 0
 
 li $v0, 10

@@ -1,0 +1,17 @@
+class A {
+	
+	void main()
+	{
+		int a, i;
+		a = 0;
+		i = 0;
+		while (i < 10)
+		{
+			int a;
+			a = 0;
+			callout("print_int", a, i);
+			i = i + 1;
+			a = a + i;
+		}
+	}
+}

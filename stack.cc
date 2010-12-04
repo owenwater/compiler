@@ -14,6 +14,7 @@ int Stack::in()
 		throw("stack is full");
 	}
 	
+	this->output_sp += 1;
 	if (this->sp >= 0)
 	{
 		this->stack[this->sp].save_and_load(SAVE, (*this));
@@ -24,7 +25,6 @@ int Stack::in()
 		this->add_cmd(cmd);
 	}
 	this->sp += 1;
-	this->output_sp += 1;
 	return 0;
 }
 

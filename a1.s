@@ -8,8 +8,9 @@ str0:
 
 .text
 .globl main
-subu $sp, 0
 main:
+
+subu $sp, 0
 li $t0, 1
 li $t1, 2
 li $t2, 3
@@ -20,6 +21,7 @@ li $t2, 5
 sub $t2, $0, $t2
 li $t3, 6
 add $t2, $t2, $t3
+
 mul $t1, $t1, $t2
 li $t2, 7
 mul $t1, $t1, $t2
@@ -43,6 +45,7 @@ syscall
 li $v0, 4
 la $a0, enter
 syscall
+
 li $v0, 4
 la $a0, str0
 syscall
@@ -52,6 +55,7 @@ syscall
 li $v0, 4
 la $a0, enter
 syscall
+
 addu $sp, 0
 
 li $v0, 10
