@@ -23,14 +23,31 @@ string Memory::find_slot()
 		string name = "t";
 		char c = i + '0';
 		name += c;
-		this->set_it = this->regi.find(name);
-		if (set_it == regi.end())
+		
+		try
 		{
-			regi.insert(name);
-			return name;
+			this->add_slot(name);
 		}
+		catch (const char *s)
+		{
+			continue;
+		}
+		return name;
 	}
 	throw("register is full");
+}
+
+int Memory::add_slot(string name)
+{
+	this->set_it = this->regi.find(name);
+	if (set_it == regi.end())
+	{
+		regi.insert(name);
+	}
+	else
+	{
+		throw ("register exist");
+	}
 }
 
 string Memory::new_value(int value, Stack &s)

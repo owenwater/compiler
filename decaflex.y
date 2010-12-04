@@ -218,6 +218,7 @@ method_call: method_name tlparen expr_comma_list trparen {
 				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			}
 			| tcallout tlparen callout_arg_list trparen {
+			$$ = $3;
 				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			}
 
@@ -243,6 +244,17 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 						s.add_cmd(p.print_str(" "));
 					}
 					s.add_cmd(p.print_str("\n"));
+				}
+				else if ($1 == "read_int")
+				{
+					try{
+						s.stack[s.sp].add_slot("v0");
+					}
+					catch (const char *s){}
+					s.add_cmd("li $v0, 5");
+					s.add_cmd("syscall");
+					string ret("v0");
+					$$ = ret;
 				}
 				args_list.clear();
 					/*$$ = "(callout_arg_list " + $1+$2+")";*/
@@ -285,6 +297,7 @@ expr: lvalue {
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | method_call {
+	  	$$ = $1;
 		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | constant {

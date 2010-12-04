@@ -13,6 +13,7 @@ class Memory
 		Memory();
 		void remove_slot(string name);
 		string find_slot();
+		int add_slot(string name);
 		string new_value(int value, Stack &s);
 		int add_var(string name);
 		int set_var(string name, string reg, Stack &s);
@@ -47,6 +48,7 @@ class Stack
 		string find_var(string name);
 
 		int sp;
+		
 	private:
 		
 };

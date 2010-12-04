@@ -1,0 +1,11 @@
+class A {
+	
+	void main()
+	{
+		int a, b;
+		callout("read_int");
+		a = callout("read_int");
+		b = callout("read_int");
+		callout("print_int", a, b);
+	}
+}
