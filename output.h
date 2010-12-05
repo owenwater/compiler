@@ -9,6 +9,7 @@ class Output
 	public:
 		Output();
 		int add(string s, char split = '\n');
+		static string get_line_tag();
 		string get_cmd();
 	private:
 		string cmd;

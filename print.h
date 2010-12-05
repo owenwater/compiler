@@ -3,6 +3,7 @@
 
 #include "base.h"
 #include "define.h"
+#include "output.h"
 
 class Print
 {

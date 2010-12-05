@@ -16,4 +16,6 @@
 
 using namespace std;
 
+extern int line;
+
 #endif

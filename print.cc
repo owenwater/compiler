@@ -5,7 +5,9 @@ string Print::print_int(string s)
 {
 	//cerr << s << endl;
 	string ret;
-	ret =  "move $a0, $" +  s + "\nli $v0, 1\nsyscall";
+	ret =  "move $a0, $" +  s + Output::get_line_tag()
+		  + "\nli $v0, 1" + Output::get_line_tag()
+		  + "\nsyscall";
 	return ret;
 }
 
@@ -15,15 +17,15 @@ string Print::print_str(string s)
 	ret = "li $v0, 4\n";
 	if (s ==" ")
 	{
-		ret += "la $a0, space\n";
+		ret += "la $a0, space" + Output::get_line_tag() + "\n";
 	}
 	else if (s == "\n")
 	{
-		ret += "la $a0, enter\n";
+		ret += "la $a0, enter" + Output::get_line_tag() + "\n";
 	}
 	else
 	{
-		ret += "la $a0, " + s + "\n";
+		ret += "la $a0, " + s + Output::get_line_tag() + "\n";
 	}
 	ret += "syscall" ;
 	return ret;

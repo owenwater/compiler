@@ -50,16 +50,13 @@ program: tclass class_name tlcb field_decl_list method_decl_list trcb {
 			cout << ".globl main"<< endl;
 			cout << "main: " << endl;
 			cout << $6 << endl;
-	   		//cout <<"(program "<<$1 << $2 << $3<<$4;
-			//cout << $5 << $6<< ")" <<endl;
 	   }
 class_name: id {
-		  	/*$$ = "(class_name "+$1+")";*/
 		  }
 field_decl_list: field_decl_list field_decl {
-			   		/*$$ = "(field_decl_list "+ $1+$2+")";*/
 			   }
-			 	| { /*$$ = "(field_decl_list EPSILON)";*/}
+			 	| {
+				}
 field_decl: type field_list {
 
 		  int i;
@@ -87,34 +84,32 @@ field_decl: type field_list {
 		   	int rt = s.stack[s.sp].add_var($2);
 			s.stack[s.sp].set_var($2, $4, s);
 			s.stack[s.sp].remove_slot($4);
-		   			/*$$ = "(field_decl "+$1+$2+$3+$4+$5+")";*/
 		   	   }
 field_list: field tcomma field_list {
 		  }
-			| field tsemicolon {/*$$ = "(field_list "+$1+$2+")";*/}
+			| field tsemicolon {
+			}
 field:  id {
 		id_list.push_back($1);
-				/*$$ = "(field "+ $1 + ")";*/
 			}
 	    | id tlsb T_INTCONSTANT trsb  {
 		 id_list.push_back($1+"["+ $3+"]");
-		 		/*$$ = "(field "+ $1+$2+$3+$4+")";*/
 		    }
 
 method_decl_list: method_decl_list method_decl {
-					/*$$ = "(method_decl_list "+ $1+$2+")";*/
 				}
 				| {
-				/*$$ = "";*/}
+				}
 method_decl: type id tlparen param_list trparen block{
 		   		s.add_cmd($2 + ":");
 		   		s.add_cmd($5);
 				s.add_cmd($6);
-		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
 		   }
 		    | tvoid id tlparen param_list trparen block{
 				if ($2 != "main")
+				{
 		   			s.add_cmd($2 + ":");
+				}
 		   		s.add_cmd($5);
 				s.add_cmd($6);
 				if ($2 == "main")
@@ -122,64 +117,52 @@ method_decl: type id tlparen param_list trparen block{
 					s.add_cmd("li $v0, 10");;
 					s.add_cmd("syscall");
 				}
-		   		/*$$ = "(method_decl " + $1+$2+$3+$4+$5+$6+")";*/
 		   }
 
 param_list: param_comma_list {
-		  		/*$$ = "(param_list "+$1 + ")";*/
 		  }
-		  | {/*$$ = "(param_list EPSILON)";*/}
+		  | {}
 param_comma_list: param tcomma param_comma_list {
-				/*$$ = "(param_comma_list "+ $1+$2+$3+")";*/
 				}
 				| param {
-					/*$$= "(param_comma_list " + $1+")";*/
 				}
-param: type id {/*$$ = "(param "+$1+$2+")";*/}
+param: type id {}
 
 block: tlcb var_decl_list statement_list trcb {
 	 			$$ = $4;
 				}
 var_decl_list: var_decl var_decl_list {
-			 	/*$$ = "(var_decl_list " + $1+$2+")";*/
 			 }
-			 | {/*$$ = "(var_decl_list EPSILON)";*/}
+			 | {}
 
 var_decl: type  id id_comma_list tsemicolon   {
 			id_list.push_back($2);
 			for (int i = 0; i < id_list.size(); i++)
 			{
-				//cerr << id_list[i]<<endl;
 				int rt = s.stack[s.sp].add_var(id_list[i]);
 
 			}
 			id_list.clear();
-			/*$$ = "(var_decl "+$1+$2+$3+$4+")";*/
 		}
 
 id_comma_list: tcomma id id_comma_list {
 			 id_list.push_back($2)
-
-			 		/*$$ = "(id_comma_list "+$1+$2+$3+")";*/}
+				}
 			   | {
-			   /*$$ =  "(id_comma_list EPSILON)";*/
 			   }
-type:  T_INT { $$ = "int"/*$$ = "(type (T_INT int))";*/}
-	 | T_BOOL{ $$ = "bool"/*$$ = "(type (T_BOOL bool))";*/}
+type:  T_INT { $$ = "int";}
+	 | T_BOOL{ $$ = "bool";}
 
-tvoid: T_VOID{ $$ = "void"/*$$ = "(T_VOID void)";*/}
+tvoid: T_VOID{ $$ = "void";}
 
 statement_list: statement statement_list{
-			  	/*$$ = "(statement_list "+$1+$2+")";*/
 			  }
-			  | {/*$$ = "(statement_list EPSILON)";*/}
+			  | {}
 
 statement:
 		 assign tsemicolon {
-		 	/*$$ = "(statement "+$1+$2+")";*/
 		 }
 		 |method_call tsemicolon {
-		 	/*$$ = "(statement "+$1+$2+")";*/
 		 }
 		 |tif tlparen expr trparen block {
 		 	if_cnt++;
@@ -195,7 +178,6 @@ statement:
 			s.add_cmd($5);
 			s.add_cmd(end_tag+":");
 		 	
-		 	/*$$ = "(statement "+$1+$2+$3+$4+$5+")";*/
 		 }
 		 |tif tlparen expr trparen block telse block {
 		 	if_cnt++;
@@ -264,17 +246,15 @@ statement:
 			s.loop_out();
 		 }
 		 | treturn opt_expr tsemicolon {
-		 	/*$$ = "(statement "+$1+$2+$3+")";*/
 		 }
-		 | tbreak tsemicolon {
+		 | T_BREAK tsemicolon {
 		 	loop_op("loop_end");
 		 }
-		 | tcontinue tsemicolon {
+		 | T_CONTINUE tsemicolon {
 		 	loop_op("loop_begin");
 		 }
 		 | block {
 		 	s.add_cmd($1);
-		 	/*$$ = "(statement "+$1+")";*/
 		 }
 for_first_part: assign_comma_list {
 			  for_loop = true;
@@ -284,10 +264,8 @@ for_third_part: assign_comma_list {
 			  }
 
 assign_comma_list: assign tcomma assign_comma_list {
-				 	/*$$ = "(assign_comma_list "+$1+$2+$3+")";*/
 				 }
 				 | assign {
-				 	/*$$ = "(assign_comma_list "+ $1+")";*/
 				 }
 assign:	lvalue T_ASSIGN expr {
 			int len = $1.length();
@@ -303,18 +281,14 @@ assign:	lvalue T_ASSIGN expr {
 			}
 			
 			s.stack[s.sp].remove_slot($3);
-			//cerr << $1 <<",  " <<$3 << endl;
 			$$ = $1;
-	  		/*$$ = "(assign " + $1+$2+$3+")";*/
 	  	}
 
 method_call: method_name tlparen expr_comma_list trparen {
-				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			}
 			| tcallout tlparen callout_arg_list trparen {
 			s.add_cmd($4);
 			$$ = $3;
-				/*$$ = "(method_call "+ $1+$2+$3+$4+")";*/
 			}
 
 callout_arg_list: stringconstant callout_arg_comma_list {
@@ -352,41 +326,33 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 					$$ = ret;
 				}
 				args_list.clear();
-					/*$$ = "(callout_arg_list " + $1+$2+")";*/
 				}
 callout_arg_comma_list: tcomma callout_arg callout_arg_comma_list {
 					  args_list.push_back($2);
-					  /*$$ = "(callout_arg_comma_list " + $1+$2+$3+")";*/
 
 				}
 				|  {
-					/*$$ = "(callout_arg_comma_list EPSILON)";*/
 				}
 callout_arg: expr {
 		   $$ = $1;
-		   		/*$$ = "(callout_arg " + $1 + ")";*/
 		   }
 		   | stringconstant {
 		   $$ = $1;
-		   		/*$$ = "(callout_arg " + $1 +")";*/
 			}
-method_name: id {/*$$ = $1;*/}
+method_name: id {}
 
-lvalue: id { $$ = $1;/*$$ = "(lvalue " + $1 + ")";*/}
+lvalue: id { $$ = $1;}
 	  | id tlsb expr trsb {
 	    $$ = $1 + "[" + $3 +"]";
-	  	/*$$ = "(lvalue " + $1+$2+$3+$4+ ")";*/
 	  }
 
 expr_comma_list: opt_expr tcomma expr_comma_list {
-			   		/*$$ = "(expr_comma_list "+$1+$2+$3+")";*/
 				}
 				| opt_expr {
-			   		/*$$ = "(expr_comma_list "+$1+")";*/
 				}
 
-opt_expr: expr{ /*$$ = "(opt_expr " + $1+ ")";*/}
-		| {/*$$ = "(opt_expr EPSILON)";*/}
+opt_expr: expr{ }
+		| {}
 
 expr: lvalue {
 		int len = $1.length();
@@ -400,15 +366,12 @@ expr: lvalue {
 		{
 			$$ = s.stack[s.sp].get_var($1,s);
 		}
-		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | method_call {
 	  	$$ = $1;
-		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | constant {
 	  	$$ = $1;
-		/*$$ = "(expr " + $1+")";*/
 	  }
 	  | expr T_PLUS expr {
 	  	s.add_cmd("add $" + $1 + ", $" + $1 + ", $" +  $3);
@@ -498,7 +461,6 @@ expr: lvalue {
 	  | tlparen expr trparen {
 	  s.add_cmd($3);
 	  $$ = $2;
-		/*$$ = "(expr " + $1+$2+$3+")";*/
 	  }
 constant: T_INTCONSTANT {
 			stringstream ss($1);
@@ -522,34 +484,32 @@ bool_constant: T_TRUE {
 stringconstant: T_STRINGCONSTANT {
 			  string s = $1.substr(1, $1.length() - 2);
 			  $$ = s;
-			  /*$$ = "(T_STRINGCONSTANT "+$1+")";*/ }
-id: T_ID { $$ = $1; /*$$ = "(T_ID "+ $1+")";*/}
+			}
+id: T_ID { $$ = $1;}
 
-tbreak: T_BREAK { /*$$ = "(T_BREAK break)";*/ }
-tcallout: T_CALLOUT { /*$$ = "(T_CALLOUT callout)";*/ }
-tclass: T_CLASS { /*$$ = "(T_CLASS class)";*/ }
-tcomma: T_COMMA { /*$$ = "(T_COMMA ,)";*/ }
-tcontinue: T_CONTINUE { /*$$ = "(T_CONTINUE continue)";*/ }
-tdot: T_DOT { /*$$ = "(T_DOT .)";*/ }
-telse: T_ELSE { /*$$ = "(T_ELSE else)";*/ }
-textends: T_EXTENDS { /*$$ = "(T_EXTENDS extends)";*/ }	//cerr << cmd[0]
+tbreak: T_BREAK { }
+tcallout: T_CALLOUT {}
+tclass: T_CLASS { }
+tcomma: T_COMMA {}
+tdot: T_DOT {  }
+telse: T_ELSE { }
+textends: T_EXTENDS {}	//cerr << cmd[0]
 tfor: T_FOR {
 	s.loop_in(loop_cnt + 1);
 	}
-tif: T_IF { /*$$ = "(T_IF if)";*/ }
+tif: T_IF { }
 tlcb: T_LCB { s.in();
-			//cerr<<"SP: " << s.sp << endl;/*$$ = "(T_LCB {)";*/
 			}
-tlparen: T_LPAREN {s.output_in(); /*$$ = "(T_LPAREN \\()";*/ }
-tlsb: T_LSB { /*$$ = "(T_LSB [)";*/ }
-tlt: T_LT { /*$$ = "(T_LT <)";*/ }
-tnew: T_NEW { /*$$ = "(T_NEW new)";*/ }
-tnull: T_NULL { /*$$ = "(T_NULL null)";*/ }
-trcb: T_RCB { $$ = s.out();/*$$ = "(T_RCB })";*/ }
-treturn: T_RETURN { /*$$ = "(T_RETURN return)";*/ }
-trot: T_ROT { /*$$ = "(T_ROT rot)";*/ }
-trparen: T_RPAREN {$$ = s.output_out(); /*$$ = "(T_RPAREN \\))";*/ }
-trsb: T_RSB { /*$$ = "(T_RSB ])";*/ }
+tlparen: T_LPAREN {s.output_in();}
+tlsb: T_LSB { }
+tlt: T_LT {}
+tnew: T_NEW {}
+tnull: T_NULL {}
+trcb: T_RCB { $$ = s.out();}
+treturn: T_RETURN {}
+trot: T_ROT {}
+trparen: T_RPAREN {$$ = s.output_out(); }
+trsb: T_RSB { }
 tsemicolon: T_SEMICOLON { 
 		  if (for_loop)
 		  {

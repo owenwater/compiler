@@ -6,49 +6,44 @@ enter:
 .text
 .globl main
 main: 
-li $t0, 3
-sw $t0, 4($sp)
-
-subu $sp, 8
-li $t0, 4
-sw $t0, 16($sp)
-lw $t0, 12($sp)
-lw $t1, 16($sp)
-move $a0, $t0
-li $v0, 1
-syscall
+li $t0, 3 # 2
+sw $t0, 4($sp) # 2
+subu $sp, 8 # 5
+li $t0, 4 # 6
+sw $t0, 16($sp) # 6
+lw $t0, 12($sp) # 7
+lw $t1, 16($sp) # 7
+move $a0, $t0 # 7
+li $v0, 1 # 7
+syscall # 7
 li $v0, 4
-la $a0, space
-syscall
-move $a0, $t1
-li $v0, 1
-syscall
+la $a0, space # 7
+syscall # 7
+move $a0, $t1 # 7
+li $v0, 1 # 7
+syscall # 7
 li $v0, 4
-la $a0, enter
-syscall
-
-subu $sp, 0
-li $t0, 5
-sw $t0, 12($sp)
-lw $t0, 12($sp)
-lw $t1, 16($sp)
-move $a0, $t0
-li $v0, 1
-syscall
+la $a0, enter # 7
+syscall # 7
+subu $sp, 0 # 8
+li $t0, 5 # 9
+sw $t0, 12($sp) # 9
+lw $t0, 12($sp) # 10
+lw $t1, 16($sp) # 10
+move $a0, $t0 # 10
+li $v0, 1 # 10
+syscall # 10
 li $v0, 4
-la $a0, space
-syscall
-move $a0, $t1
-li $v0, 1
-syscall
+la $a0, space # 10
+syscall # 10
+move $a0, $t1 # 10
+li $v0, 1 # 10
+syscall # 10
 li $v0, 4
-la $a0, enter
-syscall
-
-addu $sp, 0
-
-addu $sp, 8
-
-li $v0, 10
-syscall
+la $a0, enter # 10
+syscall # 10
+addu $sp, 0 # 11
+addu $sp, 8 # 12
+li $v0, 10 # 12
+syscall # 12
 

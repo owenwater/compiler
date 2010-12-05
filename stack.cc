@@ -1,5 +1,6 @@
 #include "stack.h"
 
+
 Stack::Stack()
 {
 	this->sp = -1;
@@ -111,7 +112,10 @@ int Stack::current_loop(int &pos)
 
 int Stack::add_cmd(string s, char split)
 {
-	//cerr << s<< endl;
+	if (s == "")
+	{
+		return -1;
+	}
 	int ret = this->output_stack[this->output_sp].add(s, split);
 	return ret;
 }
