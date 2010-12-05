@@ -6,6 +6,7 @@ Stack::Stack()
 	this->sp = -1;
 	this->output_sp = -1;
 	this->loop_sp = -1;
+	this->main_function = true;
 }
 
 int Stack::in()
@@ -17,7 +18,10 @@ int Stack::in()
 	}
 	
 	this->output_sp += 1;
-	if (this->sp >= 0)
+	if (this->sp == 0 && !this->main_function)
+	{
+	}
+	else if (this->sp >= 0)
 	{
 		this->stack[this->sp].save_and_load(SAVE, (*this));
 		
@@ -26,6 +30,8 @@ int Stack::in()
 		string cmd = "subu $sp, " + ss.str();
 		this->add_cmd(cmd);
 	}
+
+
 	this->sp += 1;
 	return 0;
 }
@@ -41,7 +47,10 @@ string Stack::out()
 	string ret;
 	if (this->sp >= 0)
 	{
-		if (this->sp > 0)
+		if (this->sp == 1 && !this->main_function)
+		{
+		}
+		else if (this->sp > 0)
 		{
 			stringstream ss;
 			ss << this->stack[(this->sp)-1].cnt;
@@ -56,6 +65,8 @@ string Stack::out()
 	}
 	this->sp -= 1;
 	this->output_sp -= 1;
+	if (this->sp == 0 && this->main_function)
+		this->main_function = false;
 	return ret;
 }
 

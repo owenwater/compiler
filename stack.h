@@ -64,7 +64,7 @@ class Stack
 		int loop_sp;
 		
 	private:
-		
+		bool main_function;
 };
 
 

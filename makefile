@@ -14,7 +14,7 @@ $(target): $(cpptargets) $(cctargets)
 
 $(cpptargets): lex.cpp parser.hpp parser.cpp
 
-$(cctargets): memory.h stack.h
+$(cctargets):
 
 lex.cpp: decaflex.l
 	$(LEX) -o lex.cpp decaflex.l

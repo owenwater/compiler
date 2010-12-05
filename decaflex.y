@@ -126,7 +126,9 @@ param_comma_list: param tcomma param_comma_list {
 				}
 				| param {
 				}
-param: type id {}
+param: type id {
+	 			s.stack[s.sp].add_var($2);
+				}
 
 block: tlcb var_decl_list statement_list trcb {
 	 			$$ = $4;

@@ -1,0 +1,11 @@
+class A {
+	int a;
+	void main()
+	{
+		int a;
+		{}
+	}
+	int f(int b)
+	{
+	}
+}
