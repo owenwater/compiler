@@ -2,10 +2,7 @@
 
 Memory::Memory()
 {
-	this->regi.clear();
-	this->vars.clear();
-	this->cnt = 0;
-	this->num = 0;
+	this->clear();
 }
 
 void Memory::remove_slot(string name)
@@ -141,6 +138,7 @@ int Memory::clear()
 	this->regi.clear();
 	this->vars.clear();
 	this->cnt = 0;
+	this->num = 0;
 }
 
 /*

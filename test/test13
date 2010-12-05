@@ -4,8 +4,14 @@ class A {
 	{
 		int a;
 		{}
+		a = 3;
 	}
 	int f(int b)
 	{
+		int a;
+		{}
+		a = 3;
+		b = 3;
+		return 0;
 	}
 }

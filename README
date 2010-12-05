@@ -33,8 +33,7 @@ Current Feature:
 		4.3) for
 		4.4) break
 		4.5) continue
-	   except:
-	    4.a) return
+	    4.6) return
 	5) system method call including:
 		5.0) print_int
 		5.1) print_str
@@ -64,7 +63,7 @@ Current Feature:
 		7.0) string
 
 TODO List:
-	0) call user function and return(4.a)
+	0) call user function
 	1) rot(6.a)
 	2) type check
 	3) "void main" function check

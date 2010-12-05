@@ -127,7 +127,7 @@ param_comma_list: param tcomma param_comma_list {
 				| param {
 				}
 param: type id {
-	 			s.stack[s.sp].add_var($2);
+	 				id_list.push_back($2);
 				}
 
 block: tlcb var_decl_list statement_list trcb {
@@ -142,7 +142,6 @@ var_decl: type  id id_comma_list tsemicolon   {
 			for (int i = 0; i < id_list.size(); i++)
 			{
 				int rt = s.stack[s.sp].add_var(id_list[i]);
-
 			}
 			id_list.clear();
 		}
@@ -248,6 +247,9 @@ statement:
 			s.loop_out();
 		 }
 		 | treturn opt_expr tsemicolon {
+		 	s.add_cmd("move $v0, $" + $2);
+			s.add_cmd("j $ra");
+		 	
 		 }
 		 | T_BREAK tsemicolon {
 		 	loop_op("loop_end");
@@ -348,13 +350,15 @@ lvalue: id { $$ = $1;}
 	    $$ = $1 + "[" + $3 +"]";
 	  }
 
-expr_comma_list: opt_expr tcomma expr_comma_list {
+expr_comma_list: expr tcomma expr_comma_list {
 				}
 				| opt_expr {
 				}
 
-opt_expr: expr{ }
-		| {}
+opt_expr: expr{ $$ = $1;}
+		| {
+			$$ = "zero";
+		}
 
 expr: lvalue {
 		int len = $1.length();
@@ -501,6 +505,14 @@ tfor: T_FOR {
 	}
 tif: T_IF { }
 tlcb: T_LCB { s.in();
+			if (!id_list.empty())
+			{
+				for (int i = 0; i < id_list.size(); i++)
+				{
+					s.stack[s.sp].add_var(id_list[i]);
+				}
+				id_list.clear();
+			}
 			}
 tlparen: T_LPAREN {s.output_in();}
 tlsb: T_LSB { }
