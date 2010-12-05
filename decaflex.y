@@ -10,6 +10,7 @@
 	string get_tag(int i, string s);
 	string cmp_cmd(string op, string e1, string e2);
 	int loop_op(string op);
+	int add_arg(string reg);
 	
 	bool for_loop;
 	
@@ -20,6 +21,7 @@
 	string for_split = "@@";
 	
 	int if_cnt, loop_cnt, cmp_cnt;
+	int arg_cnt;
 %}
 %debug
 %code requires{
@@ -248,6 +250,8 @@ statement:
 		 }
 		 | treturn opt_expr tsemicolon {
 		 	s.add_cmd("move $v0, $" + $2);
+			if ($2 != "zero")
+				s.stack[s.sp].remove_slot($2);
 			s.add_cmd("j $ra");
 		 	
 		 }
@@ -289,6 +293,7 @@ assign:	lvalue T_ASSIGN expr {
 	  	}
 
 method_call: method_name tlparen expr_comma_list trparen {
+
 			}
 			| tcallout tlparen callout_arg_list trparen {
 			s.add_cmd($4);
@@ -329,6 +334,10 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 					string ret("v0");
 					$$ = ret;
 				}
+				else
+				{
+					throw("system method does not exist");
+				}
 				args_list.clear();
 				}
 callout_arg_comma_list: tcomma callout_arg callout_arg_comma_list {
@@ -343,7 +352,12 @@ callout_arg: expr {
 		   | stringconstant {
 		   $$ = $1;
 			}
-method_name: id {}
+method_name: id {
+		   $$ = $1;
+		   s.in();
+		   arg_cnt = 0;
+		   //TODO: method exist check
+		   }
 
 lvalue: id { $$ = $1;}
 	  | id tlsb expr trsb {
@@ -351,8 +365,13 @@ lvalue: id { $$ = $1;}
 	  }
 
 expr_comma_list: expr tcomma expr_comma_list {
+			   	add_arg($1);
 				}
 				| opt_expr {
+					if ($1 != "zero")
+					{
+						add_arg($1);
+					}
 				}
 
 opt_expr: expr{ $$ = $1;}
@@ -536,6 +555,15 @@ twhile: T_WHILE {
 
 	
 %%
+int add_arg(string reg)
+{
+	arg_cnt++;
+	stringstream ss;
+	ss << (arg_cnt * Memory::step);
+	s.add_cmd("sw $" + reg + ", " + ss.str() +"($sp)");
+	s.stack[s.sp].remove_slot(reg);
+}
+
 
 void yyerror(const char *s)
 {
