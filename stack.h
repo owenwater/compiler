@@ -53,7 +53,7 @@ class Stack
 		int loop_pos[max_size];
 		
 		int add_cmd(string s, char split='\n');
-		string find_var(string name);
+		string find_var(string name, string & pointer);
 
 		int output_in();
 		string output_out();

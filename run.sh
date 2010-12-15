@@ -1,4 +1,4 @@
-b=13
+b=1
 n=13
 test_dir=test
 for ((i=b;i<=n;i++))

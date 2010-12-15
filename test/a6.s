@@ -6,7 +6,7 @@ enter:
 .text
 .globl main
 main: 
-subu $sp, 0 # 4
+lui $s7, 0x1001
 li $v0, 5 # 6
 syscall # 6
 li $v0, 5 # 7

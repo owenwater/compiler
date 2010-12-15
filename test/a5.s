@@ -6,7 +6,7 @@ enter:
 .text
 .globl main
 main: 
-subu $sp, 0 # 4
+lui $s7, 0x1001
 li $t0, 4 # 6
 li $t1, 5 # 6
 bgt $t0, $t1, cmp0 # 6

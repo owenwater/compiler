@@ -51,6 +51,8 @@ program: tclass class_name tlcb field_decl_list method_decl_list trcb {
 			cout << ".text"<< endl;
 			cout << ".globl main"<< endl;
 			cout << "main: " << endl;
+			cout << "lui $" << hp << ", 0x1001" << endl;
+
 			cout << $6 << endl;
 	   }
 class_name: id {
@@ -638,6 +640,8 @@ int init()
 		if_cnt = -1;
 		loop_cnt = -1;
 		cmp_cnt = -1;
+
+		hp = "s7";
 
 		for_loop = false;
 

@@ -1,5 +1,6 @@
 #include "stack.h"
 
+string hp;
 
 Stack::Stack()
 {
@@ -18,11 +19,13 @@ int Stack::in(bool call_fun)
 	}
 	
 	this->output_sp += 1;
-	if (this->sp == 0 && !this->main_function)
+	if (this->sp == 0)
 	{
+		this->stack[this->sp+1].call_fun = true;
 	}
-	else if (this->sp >= 0)
+	else if (this->sp > 0)
 	{
+
 		this->stack[this->sp].save_and_load(SAVE, (*this));
 		
 		stringstream ss;
@@ -33,7 +36,6 @@ int Stack::in(bool call_fun)
 
 
 	this->sp += 1;
-	if (this->sp >= 0) this->stack[this->sp].call_fun = call_fun;
 
 	return 0;
 }
@@ -49,10 +51,11 @@ string Stack::out(bool call_fun)
 	string ret;
 	if (this->sp >= 0)
 	{
-		if (this->sp == 1 && !this->main_function)
+		/*if (this->sp == 1 && !this->main_function)
 		{
-		}
-		else if (this->sp > 0)
+		}*/
+		/*else*/
+		if (this->sp > 0)
 		{
 			stringstream ss;
 			ss << this->stack[(this->sp)-1].cnt;
@@ -134,29 +137,44 @@ int Stack::add_cmd(string s, char split)
 	return ret;
 }
 
-string Stack::find_var(string name)
+string Stack::find_var(string name, string &pointer)
 {
 	int sp = this->sp + 1;
 	map<string, int>::iterator it;
 	int base = 0;
 	int finding_global = 0;
+	//cerr <<name <<": " << endl;
 	do
 	{
 		sp--;
+	//	cerr << "stack: " <<sp <<", " << this->stack[sp].call_fun << endl;
 		if (sp < 0) throw("variable already exist");
 		if (sp < this->sp)
 			base += this->stack[sp].cnt;
-		/*if (finding_global == 1) 
+		if (finding_global == 1) 
 			finding_global = 2;
 		if (finding_global == 2 && sp > 0) continue;
 		if (finding_global == 0 && this->stack[sp].call_fun)
 		{
 			finding_global = 1;
-		}*/
+		}
 		it = this->stack[sp].vars.find(name);
 	}
 	while (it == this->stack[sp].vars.end());
-	int pos = base - ((*it).second)* Memory::step - Memory::step;
+	int pos;
+	//cerr<<finding_global << endl;
+	//cerr<<"===" << endl;
+	if (sp > 0)
+	{
+		pos = base - ((*it).second)* Memory::step - Memory::step;
+		pointer = "sp";
+	}
+	else
+	{
+		//cerr  << "here" << endl;
+		pos = - ((*it).second)* Memory::step - Memory::step;
+		pointer = hp;
+	}
 	stringstream ss;
 	ss << pos;
 	/*cerr << name <<": " << pos << endl;

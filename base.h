@@ -18,4 +18,6 @@ using namespace std;
 
 extern int line;
 
+extern string hp;
+
 #endif

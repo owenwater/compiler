@@ -9,7 +9,7 @@ str0:
 .text
 .globl main
 main: 
-subu $sp, 0 # 4
+lui $s7, 0x1001
 li $t0, 1 # 6
 li $t1, 2 # 6
 li $t2, 3 # 6

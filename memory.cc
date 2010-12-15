@@ -16,10 +16,10 @@ void Memory::remove_slot(string name)
 
 string Memory::find_slot()
 {
-	const string reg_name[18] = 
+	const string reg_name[17] = 
 			{"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
-			 "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"};
-	const int reg_num = 18;
+			 "s0", "s1", "s2", "s3", "s4", "s5", "s6"};
+	const int reg_num = 17;
 	for (int i = 0; i < reg_num; i++)
 	{
 		string name = reg_name[i];
@@ -77,17 +77,18 @@ int Memory::add_var(string name, int len )
 
 int Memory::set_var(string name, string reg, Stack &s, string move  )
 {
-	string pos = s.find_var(name);
+	string sp;
+	string pos = s.find_var(name, sp);
 	if (move != "")
 	{
 		s.add_cmd("sll $" +  move + ", $" + move + ", 2");
-		s.add_cmd("sub $sp, $sp, $" +  move);
+		s.add_cmd("sub $"+sp+", $"+sp+", $" +  move);
 	}
-	string cmd = "sw $" + reg + ", " + pos + "($sp)";
+	string cmd = "sw $" + reg + ", " + pos + "($"+sp+")";
 	s.add_cmd(cmd);
 	if (move != "")
 	{
-		s.add_cmd("add $sp, $sp, $" + move);
+		s.add_cmd("add $"+sp+", $"+sp+", $" + move);
 		this->remove_slot(move);
 	}
 	return 0;
@@ -95,18 +96,19 @@ int Memory::set_var(string name, string reg, Stack &s, string move  )
 
 string Memory::get_var(string name, Stack &s, string move )
 {
-	string pos = s.find_var(name);
+	string sp;
+	string pos = s.find_var(name, sp);
 	string reg = this->find_slot();
 	if (move != "")
 	{
 		s.add_cmd("sll $" +  move + ", $" + move + ", 2");
-		s.add_cmd("sub $sp, $sp, $" + move);
+		s.add_cmd("sub $"+sp+", $"+sp+", $" + move);
 	}
-	string cmd = "lw $" + reg + ", " + pos + "($sp)";
+	string cmd = "lw $" + reg + ", " + pos + "($"+sp+")";
 	s.add_cmd(cmd);
 	if (move != "")
 	{
-		s.add_cmd("add $sp, $sp, $" + move);
+		s.add_cmd("add $"+sp+", $"+sp+", $" + move);
 		this->remove_slot(move);
 	}
 	return reg;
