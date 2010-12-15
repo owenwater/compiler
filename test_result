@@ -177,3 +177,30 @@ Loaded: /home/anoop/cmpt379/spim-8.0/lib/exceptions.s
 21 4 11
 25 222
 
+Tesing 15... 
+SPIM Version 8.0 of January 8, 2010
+Copyright 1990-2010, James R. Larus.
+All Rights Reserved.
+See the file README for a full copyright notice.
+Loaded: /home/anoop/cmpt379/spim-8.0/lib/exceptions.s
+1
+0
+
+Tesing 16... 
+SPIM Version 8.0 of January 8, 2010
+Copyright 1990-2010, James R. Larus.
+All Rights Reserved.
+See the file README for a full copyright notice.
+Loaded: /home/anoop/cmpt379/spim-8.0/lib/exceptions.s
+0 1
+1 1
+2 2
+3 6
+4 24
+5 120
+6 720
+7 5040
+8 40320
+9 362880
+10 3628800
+

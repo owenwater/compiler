@@ -251,7 +251,9 @@ statement:
 			s.loop_out();
 		 }
 		 | treturn opt_expr tsemicolon {
+		 	int tmp_sp = s.sp;
 		 	end_function($2);
+			s.sp = tmp_sp;
 		 }
 		 | T_BREAK tsemicolon {
 		 	loop_op("loop_end");
@@ -300,7 +302,7 @@ method_call: method_name tlparen expr_comma_list trparen {
 			}
 		   	s.add_cmd("jal " + $1);
 			/*Calling...*/
-			s.out(true);
+			s.out(2);
 			for (int i = 0 ; i < s.stack[s.sp].release_list.size(); i++)
 			{
 			}
@@ -567,7 +569,7 @@ trcb: T_RCB {
 	{
 		end_function("zero");
 	}
-	s.out(false);
+	s.out(2);
 	$$ = s.output_out();
 	}
 treturn: T_RETURN {}
@@ -594,17 +596,20 @@ int end_function(string reg)
 	{
 		s.stack[s.sp].remove_slot(reg);
 	}
-	while (true)
+	while (!s.stack[s.sp].call_fun)
 	{
-		if (s.stack[s.sp].call_fun)
+		if (s.stack[s.sp-1].call_fun)
 		{
+			s.out(1);
 			break;
 		}
-		s.out(false);
+		else
+		{	
+			s.out(0);
+		}
 	}
  	s.add_cmd("move $v0, $a3"); /*save return*/
 	s.add_cmd("j $ra");
-	//s.out(true);
 }
 
 int add_arg(string reg, int arg_cnt)

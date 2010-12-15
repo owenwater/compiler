@@ -45,8 +45,8 @@ class Stack
 		
 		Stack();
 		int in(bool call_fun);
-		string out(bool call_fun);
-		
+		string out(int load);
+		/*2: load and clear. 1:load and not clear, 0: not load*/
 		Memory stack[max_size];
 		Output output_stack[max_size];		
 		int loop_stack[max_size];

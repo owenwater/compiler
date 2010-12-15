@@ -39,7 +39,7 @@ int Stack::in(bool call_fun)
 	return 0;
 }
 
-string Stack::out(bool call_fun)
+string Stack::out(int load)
 {
 	/*stack pop, return the commands in this levestack pop, return the commands in this levell*/
 	if (this->sp < 0)
@@ -50,10 +50,6 @@ string Stack::out(bool call_fun)
 	string ret;
 	if (this->sp >= 0)
 	{
-		/*if (this->sp == 1 && !this->main_function)
-		{
-		}*/
-		/*else*/
 		if (this->sp > 1)
 		{
 			stringstream ss;
@@ -61,15 +57,16 @@ string Stack::out(bool call_fun)
 			string cmd = "addu $sp, " + ss.str();
 			this->add_cmd(cmd);
 		
-			this->stack[(this->sp) - 1].save_and_load(LOAD, (*this));
+			if (load >= 1)
+			{
+				this->stack[(this->sp) - 1].save_and_load(LOAD, (*this));
+			}
 		
 		}
-		//ret = this->output_stack[this->output_sp].get_cmd();
-		this->stack[this->sp].clear();
+		if (load == 2)this->stack[this->sp].clear();
 	}
-	this->stack[this->sp].call_fun = false;
+	if (load == 2) this->stack[this->sp].call_fun = false;
 	this->sp -= 1;
-//	this->output_sp -= 1;
 	if (this->sp == 0 && this->main_function)
 		this->main_function = false;
 	return "";

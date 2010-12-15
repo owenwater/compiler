@@ -5,11 +5,18 @@ class A {
 		int a;
 		a = f(3);
 		callout("print_int", a);
+		a = f(10);
+		callout("print_int", a);
 	}
 	int f(int a)
 	{
+		if (a < 5)
 		{
 			return 1;
+		}
+		else
+		{
+			return 0;
 		}
 	}
 }

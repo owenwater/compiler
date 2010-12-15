@@ -1,0 +1,28 @@
+class A {
+	
+	void main()
+	{
+		int i;
+		for(i = 0; i <= 10; i = i + 1)
+		{
+			int a;
+			a = f(i);
+			callout("print_int", i, a);
+		}
+	}
+	int f(int n)
+	{
+		if (n == 0)
+		{
+			return 1;
+		}
+		if (n <= 2)
+		{
+			return n;
+		}
+		else
+		{
+			return n * f(n-1);
+		}
+	}
+}
