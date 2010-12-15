@@ -1,0 +1,15 @@
+class A {
+	
+	void main()
+	{
+		int a;
+		a = f(3);
+		callout("print_int", a);
+	}
+	int f(int a)
+	{
+		{
+			return 1;
+		}
+	}
+}
