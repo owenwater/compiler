@@ -24,6 +24,9 @@ class Memory
 		int cnt;
 		const static int step = 4;
 		map<string, int> vars;
+		bool call_fun;
+
+		vector<string> release_list;
 
 	private:
 		
@@ -41,8 +44,8 @@ class Stack
 		const static int max_size = 30000;
 		
 		Stack();
-		int in();
-		string out();
+		int in(bool call_fun);
+		string out(bool call_fun);
 		
 		Memory stack[max_size];
 		Output output_stack[max_size];		

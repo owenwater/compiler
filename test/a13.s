@@ -6,22 +6,96 @@ enter:
 .text
 .globl main
 main: 
-subu $sp, 4 # 4
-subu $sp, 4 # 6
-addu $sp, 4 # 6
-li $t0, 3 # 7
-sw $t0, 4($sp) # 7
-addu $sp, 4 # 8
-li $v0, 10 # 8
-syscall # 8
-f: # 16
-subu $sp, 8 # 12
-addu $sp, 8 # 12
-li $t0, 3 # 13
-sw $t0, 8($sp) # 13
-li $t0, 3 # 14
-sw $t0, 4($sp) # 14
-li $t0, 0 # 15
-move $v0, $t0 # 15
-j $ra # 15
+li $t0, 4 # 2
+sw $t0, -4($sp) # 2
+li $t0, 5 # 3
+sw $t0, -8($sp) # 3
+subu $sp, 8 # 5
+li $t0, 1 # 7
+sw $t0, -8($sp) # 7
+li $t0, 2 # 8
+sw $t0, -4($sp) # 8
+lw $t0, -8($sp) # 9
+lw $t1, -4($sp) # 9
+lw $t2, 4($sp) # 9
+lw $t3, 0($sp) # 9
+move $a0, $t0 # 9
+li $v0, 1 # 9
+syscall # 9
+li $v0, 4
+la $a0, space # 9
+syscall # 9
+move $a0, $t1 # 9
+li $v0, 1 # 9
+syscall # 9
+li $v0, 4
+la $a0, space # 9
+syscall # 9
+move $a0, $t2 # 9
+li $v0, 1 # 9
+syscall # 9
+li $v0, 4
+la $a0, space # 9
+syscall # 9
+move $a0, $t3 # 9
+li $v0, 1 # 9
+syscall # 9
+li $v0, 4
+la $a0, enter # 9
+syscall # 9
+subu $sp, 8 # 10
+li $t0, 11 # 12
+sw $t0, -16($sp) # 12
+li $t0, 12 # 13
+sw $t0, -12($sp) # 13
+li $t0, 13 # 14
+sw $t0, -8($sp) # 14
+li $t0, 14 # 15
+sw $t0, -4($sp) # 15
+lw $t0, -16($sp) # 16
+lw $t1, -12($sp) # 16
+lw $t2, -8($sp) # 16
+lw $t3, -4($sp) # 16
+lw $t4, 12($sp) # 16
+lw $t5, 8($sp) # 16
+move $a0, $t0 # 16
+li $v0, 1 # 16
+syscall # 16
+li $v0, 4
+la $a0, space # 16
+syscall # 16
+move $a0, $t1 # 16
+li $v0, 1 # 16
+syscall # 16
+li $v0, 4
+la $a0, space # 16
+syscall # 16
+move $a0, $t2 # 16
+li $v0, 1 # 16
+syscall # 16
+li $v0, 4
+la $a0, space # 16
+syscall # 16
+move $a0, $t3 # 16
+li $v0, 1 # 16
+syscall # 16
+li $v0, 4
+la $a0, space # 16
+syscall # 16
+move $a0, $t4 # 16
+li $v0, 1 # 16
+syscall # 16
+li $v0, 4
+la $a0, space # 16
+syscall # 16
+move $a0, $t5 # 16
+li $v0, 1 # 16
+syscall # 16
+li $v0, 4
+la $a0, enter # 16
+syscall # 16
+addu $sp, 8 # 17
+addu $sp, 8 # 18
+li $v0, 10 # 18
+syscall # 18
 

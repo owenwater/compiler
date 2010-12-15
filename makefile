@@ -10,7 +10,7 @@ target = a
 all: $(target)
 
 $(target): $(cpptargets) $(cctargets)
-	$(CC) -o a $(cpptargets) $(cctargets)
+	$(CC) -o a $(cpptargets) $(cctargets) -g
 
 $(cpptargets): lex.cpp parser.hpp parser.cpp
 

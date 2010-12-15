@@ -16,11 +16,13 @@ void Memory::remove_slot(string name)
 
 string Memory::find_slot()
 {
-	for (int i = 0; i <= 9; i++)
+	const string reg_name[18] = 
+			{"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
+			 "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"};
+	const int reg_num = 18;
+	for (int i = 0; i < reg_num; i++)
 	{
-		string name = "t";
-		char c = i + '0';
-		name += c;
+		string name = reg_name[i];
 		
 		try
 		{
@@ -79,13 +81,13 @@ int Memory::set_var(string name, string reg, Stack &s, string move  )
 	if (move != "")
 	{
 		s.add_cmd("sll $" +  move + ", $" + move + ", 2");
-		s.add_cmd("add $sp, $sp, $" +  move);
+		s.add_cmd("sub $sp, $sp, $" +  move);
 	}
 	string cmd = "sw $" + reg + ", " + pos + "($sp)";
 	s.add_cmd(cmd);
 	if (move != "")
 	{
-		s.add_cmd("sub $sp, $sp, $" + move);
+		s.add_cmd("add $sp, $sp, $" + move);
 		this->remove_slot(move);
 	}
 	return 0;
@@ -98,13 +100,13 @@ string Memory::get_var(string name, Stack &s, string move )
 	if (move != "")
 	{
 		s.add_cmd("sll $" +  move + ", $" + move + ", 2");
-		s.add_cmd("add $sp, $sp, $" + move);
+		s.add_cmd("sub $sp, $sp, $" + move);
 	}
 	string cmd = "lw $" + reg + ", " + pos + "($sp)";
 	s.add_cmd(cmd);
 	if (move != "")
 	{
-		s.add_cmd("sub $sp, $sp, $" + move);
+		s.add_cmd("add $sp, $sp, $" + move);
 		this->remove_slot(move);
 	}
 	return reg;
@@ -124,7 +126,7 @@ int Memory::save_and_load(int flag, Stack &s)
 	{
 		cnt += step;
 		stringstream ss;
-		ss<< cnt;
+		ss<< -cnt;
 		string cmd = op + " $" + (*set_it) + ", " + ss.str() + "($sp)";
 		s.add_cmd(cmd);
 		set_it++;
@@ -139,6 +141,8 @@ int Memory::clear()
 	this->vars.clear();
 	this->cnt = 0;
 	this->num = 0;
+	this->call_fun = false;
+	this->release_list.clear();
 }
 
 /*

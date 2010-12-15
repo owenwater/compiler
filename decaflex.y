@@ -293,11 +293,18 @@ assign:	lvalue T_ASSIGN expr {
 	  	}
 
 method_call: method_name tlparen expr_comma_list trparen {
+			s.out(true);
+			for (int i = 0 ; i < s.stack[s.sp].release_list.size(); i++)
+			{
+				s.stack[s.sp].remove_slot(s.stack[s.sp].release_list[i]);
+			}
+			s.stack[s.sp].release_list.clear();
 
 			}
 			| tcallout tlparen callout_arg_list trparen {
 			s.add_cmd($4);
 			$$ = $3;
+
 			}
 
 callout_arg_list: stringconstant callout_arg_comma_list {
@@ -354,7 +361,7 @@ callout_arg: expr {
 			}
 method_name: id {
 		   $$ = $1;
-		   s.in();
+		   s.in(true);
 		   arg_cnt = 0;
 		   //TODO: method exist check
 		   }
@@ -523,7 +530,7 @@ tfor: T_FOR {
 	s.loop_in(loop_cnt + 1);
 	}
 tif: T_IF { }
-tlcb: T_LCB { s.in();
+tlcb: T_LCB { s.in(false);
 			if (!id_list.empty())
 			{
 				for (int i = 0; i < id_list.size(); i++)
@@ -538,7 +545,7 @@ tlsb: T_LSB { }
 tlt: T_LT {}
 tnew: T_NEW {}
 tnull: T_NULL {}
-trcb: T_RCB { $$ = s.out();}
+trcb: T_RCB { $$ = s.out(false);}
 treturn: T_RETURN {}
 trot: T_ROT {}
 trparen: T_RPAREN {$$ = s.output_out(); }
@@ -559,9 +566,9 @@ int add_arg(string reg)
 {
 	arg_cnt++;
 	stringstream ss;
-	ss << (arg_cnt * Memory::step);
+	ss << (-arg_cnt * Memory::step);
 	s.add_cmd("sw $" + reg + ", " + ss.str() +"($sp)");
-	s.stack[s.sp].remove_slot(reg);
+	s.stack[s.sp-1].release_list.push_back(reg);
 }
 
 

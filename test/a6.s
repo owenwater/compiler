@@ -11,12 +11,12 @@ li $v0, 5 # 6
 syscall # 6
 li $v0, 5 # 7
 syscall # 7
-sw $v0, 8($sp) # 7
+sw $v0, -8($sp) # 7
 li $v0, 5 # 8
 syscall # 8
-sw $v0, 4($sp) # 8
-lw $t0, 8($sp) # 9
-lw $t1, 4($sp) # 9
+sw $v0, -4($sp) # 8
+lw $t0, -8($sp) # 9
+lw $t1, -4($sp) # 9
 move $a0, $t0 # 9
 li $v0, 1 # 9
 syscall # 9
