@@ -12,13 +12,12 @@ Stack::Stack()
 
 int Stack::in(bool call_fun)
 {
-	if (this-> sp        >= this->max_size - 1 
-	 || this-> output_sp >= this->max_size - 1)
+	if (this-> sp >= this->max_size - 1 )
 	{
 		throw("stack is full");
 	}
 	
-	this->output_sp += 1;
+//	this->output_sp += 1;
 	if (this->sp == 0)
 	{
 		this->stack[this->sp+1].call_fun = true;
@@ -27,10 +26,10 @@ int Stack::in(bool call_fun)
 	{
 
 		this->stack[this->sp].save_and_load(SAVE, (*this));
-		
 		stringstream ss;
 		ss << this->stack[this->sp].cnt;
 		string cmd = "subu $sp, " + ss.str();
+		//cerr << this->sp <<" " << call_fun<< endl;
 		this->add_cmd(cmd);
 	}
 
@@ -43,7 +42,7 @@ int Stack::in(bool call_fun)
 string Stack::out(bool call_fun)
 {
 	/*stack pop, return the commands in this levestack pop, return the commands in this levell*/
-	if (this->sp < 0 || this->output_sp < 0)
+	if (this->sp < 0)
 	{
 		throw("stack is empty");
 	}
@@ -55,7 +54,7 @@ string Stack::out(bool call_fun)
 		{
 		}*/
 		/*else*/
-		if (this->sp > 0)
+		if (this->sp > 1)
 		{
 			stringstream ss;
 			ss << this->stack[(this->sp)-1].cnt;
@@ -65,15 +64,15 @@ string Stack::out(bool call_fun)
 			this->stack[(this->sp) - 1].save_and_load(LOAD, (*this));
 		
 		}
-		ret = this->output_stack[this->output_sp].get_cmd();
+		//ret = this->output_stack[this->output_sp].get_cmd();
 		this->stack[this->sp].clear();
 	}
 	this->stack[this->sp].call_fun = false;
 	this->sp -= 1;
-	this->output_sp -= 1;
+//	this->output_sp -= 1;
 	if (this->sp == 0 && this->main_function)
 		this->main_function = false;
-	return ret;
+	return "";
 }
 
 

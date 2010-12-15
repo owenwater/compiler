@@ -17,8 +17,9 @@ li $t0, 1 # 5
 xori $t0, $t0, 1 # 5
 beq $t0, $zero, end_if0 # 9
 then0: # 9
-sw $t0, -4($sp) # 6
-subu $sp, 4 # 6
+sw $ra, -4($sp) # 6
+sw $t0, -8($sp) # 6
+subu $sp, 8 # 6
 li $t0, 1 # 7
 move $a0, $t0 # 7
 li $v0, 1 # 7
@@ -26,8 +27,9 @@ syscall # 7
 li $v0, 4
 la $a0, enter # 7
 syscall # 7
-addu $sp, 4 # 8
-lw $t0, -4($sp) # 8
+addu $sp, 8 # 8
+lw $ra, -4($sp) # 8
+lw $t0, -8($sp) # 8
 end_if0: # 9
 li $t0, 1 # 9
 xori $t0, $t0, 1 # 9
@@ -36,8 +38,9 @@ xori $t1, $t1, 1 # 9
 or $t0, $t0, $t1 # 9
 beq $t0, $zero, else4 # 30
 then4: # 30
-sw $t0, -4($sp) # 10
-subu $sp, 4 # 10
+sw $ra, -4($sp) # 10
+sw $t0, -8($sp) # 10
+subu $sp, 8 # 10
 li $t0, 0 # 11
 li $t1, 1 # 11
 li $t2, 0 # 11
@@ -104,12 +107,14 @@ end_if2: # 25
 addu $sp, 4 # 25
 lw $t0, -4($sp) # 25
 end_if3: # 25
-addu $sp, 4 # 26
-lw $t0, -4($sp) # 26
+addu $sp, 8 # 26
+lw $ra, -4($sp) # 26
+lw $t0, -8($sp) # 26
 j end_if4 # 30
 else4: # 30
-sw $t0, -4($sp) # 28
-subu $sp, 4 # 28
+sw $ra, -4($sp) # 28
+sw $t0, -8($sp) # 28
+subu $sp, 8 # 28
 li $v0, 4
 la $a0, str1 # 29
 syscall # 29
@@ -119,10 +124,13 @@ syscall # 29
 li $v0, 4
 la $a0, enter # 29
 syscall # 29
-addu $sp, 4 # 30
-lw $t0, -4($sp) # 30
+addu $sp, 8 # 30
+lw $ra, -4($sp) # 30
+lw $t0, -8($sp) # 30
 end_if4: # 30
-addu $sp, 0 # 31
+move $a3, $zero # 31
+move $v0, $a3 # 31
+j $ra # 31
 li $v0, 10 # 31
 syscall # 31
 

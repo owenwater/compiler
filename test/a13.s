@@ -43,7 +43,8 @@ syscall # 9
 li $v0, 4
 la $a0, enter # 9
 syscall # 9
-subu $sp, 8 # 10
+sw $ra, -12($sp) # 10
+subu $sp, 12 # 10
 li $t0, 11 # 12
 sw $t0, -16($sp) # 12
 li $t0, 12 # 13
@@ -94,8 +95,11 @@ syscall # 16
 li $v0, 4
 la $a0, enter # 16
 syscall # 16
-addu $sp, 8 # 17
-addu $sp, 0 # 18
+addu $sp, 12 # 17
+lw $ra, -12($sp) # 17
+move $a3, $zero # 18
+move $v0, $a3 # 18
+j $ra # 18
 li $v0, 10 # 18
 syscall # 18
 

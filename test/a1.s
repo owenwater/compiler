@@ -52,7 +52,9 @@ syscall # 9
 li $v0, 4
 la $a0, enter # 9
 syscall # 9
-addu $sp, 0 # 10
+move $a3, $zero # 10
+move $v0, $a3 # 10
+j $ra # 10
 li $v0, 10 # 10
 syscall # 10
 

@@ -1,20 +1,17 @@
 class A {
-	int a;
-	int c;
+	int c = 11;
 	void main()
 	{
-		int a;
-		{}
-		a = 3;
-		c = 123;
+		int a, c;
+		a = 21;
+		c = 222;
+		callout("print_int", a, c);
+		a = f(a, 4);
+		callout("print_int", a, c);
 	}
-	int f(int b)
+	int f(int a, int b)
 	{
-		int a;
-		{}
-		a = 3;
-		b = 3;
-		c = 111;
-		return 0;
+		callout("print_int", a, b, c);
+		return a + b;
 	}
 }

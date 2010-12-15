@@ -199,7 +199,9 @@ syscall # 23
 li $v0, 4
 la $a0, enter # 23
 syscall # 23
-addu $sp, 0 # 24
+move $a3, $zero # 24
+move $v0, $a3 # 24
+j $ra # 24
 li $v0, 10 # 24
 syscall # 24
 

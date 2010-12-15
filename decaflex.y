@@ -10,8 +10,9 @@
 	string get_tag(int i, string s);
 	string cmp_cmd(string op, string e1, string e2);
 	int loop_op(string op);
-	int add_arg(string reg);
-	
+	int add_arg(string reg, int arg_cnt);
+	int end_function(string reg);
+
 	bool for_loop;
 	
 	Stack s;
@@ -21,7 +22,6 @@
 	string for_split = "@@";
 	
 	int if_cnt, loop_cnt, cmp_cnt;
-	int arg_cnt;
 %}
 %debug
 %code requires{
@@ -251,20 +251,7 @@ statement:
 			s.loop_out();
 		 }
 		 | treturn opt_expr tsemicolon {
-		 	s.add_cmd("move $a3, $" + $2);
-			if ($2 != "zero")
-				s.stack[s.sp].remove_slot($2);
-			while (true)
-			{
-				if (s.stack[s.sp].call_fun)
-				{
-					break;
-				}
-				s.out(false);
-			}
-		 	s.add_cmd("move $v0, $a3");
-			s.add_cmd("j $ra");
-		 	
+		 	end_function($2);
 		 }
 		 | T_BREAK tsemicolon {
 		 	loop_op("loop_end");
@@ -304,20 +291,28 @@ assign:	lvalue T_ASSIGN expr {
 	  	}
 
 method_call: method_name tlparen expr_comma_list trparen {
-		    s.stack[s.sp].add_slot("ra");
+		   //user method call
+		    s.add_cmd($4);
+		    s.in(true);
+			for (int i = 0; i < s.stack[s.sp-1].release_list.size(); i++)
+			{
+				add_arg(s.stack[s.sp-1].release_list[i], i);
+			}
 		   	s.add_cmd("jal " + $1);
+			/*Calling...*/
 			s.out(true);
 			for (int i = 0 ; i < s.stack[s.sp].release_list.size(); i++)
 			{
-				s.stack[s.sp].remove_slot(s.stack[s.sp].release_list[i]);
 			}
 			s.stack[s.sp].release_list.clear();
+			string ret("v0");
+			$$ = ret;
 
 			}
 			| tcallout tlparen callout_arg_list trparen {
+			// system method call
 			s.add_cmd($4);
 			$$ = $3;
-
 			}
 
 callout_arg_list: stringconstant callout_arg_comma_list {
@@ -331,7 +326,7 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 						if (i != 0) s.add_cmd(p.print_str(" "));
 					}
 					s.add_cmd(p.print_str("\n"));
-					
+					$$ = "zero";
 				}
 				else if ($1 == "print_str")
 				{
@@ -342,11 +337,12 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 						s.add_cmd(p.print_str(" "));
 					}
 					s.add_cmd(p.print_str("\n"));
+					$$ = "zero";
 				}
 				else if ($1 == "read_int")
 				{
 					try{
-						s.stack[s.sp].add_slot("v0");
+						//s.stack[s.sp].add_slot("v0");
 					}
 					catch (const char *s){}
 					s.add_cmd("li $v0, 5");
@@ -374,8 +370,6 @@ callout_arg: expr {
 			}
 method_name: id {
 		   $$ = $1;
-		   s.in(true);
-		   arg_cnt = 0;
 		   //TODO: method exist check
 		   }
 
@@ -385,12 +379,14 @@ lvalue: id { $$ = $1;}
 	  }
 
 expr_comma_list: expr tcomma expr_comma_list {
-			   	add_arg($1);
+			   	//add_arg($1);
+				s.stack[s.sp].release_list.push_back($1);
 				}
 				| opt_expr {
 					if ($1 != "zero")
 					{
-						add_arg($1);
+						s.stack[s.sp].release_list.push_back($1);
+						//add_arg($1);
 					}
 				}
 
@@ -413,6 +409,8 @@ expr: lvalue {
 		}
 	  }
 	  | method_call {
+	    if ($1 != "zero")
+		    s.stack[s.sp].add_slot($1);
 	  	$$ = $1;
 	  }
 	  | constant {
@@ -543,10 +541,16 @@ tfor: T_FOR {
 	s.loop_in(loop_cnt + 1);
 	}
 tif: T_IF { }
-tlcb: T_LCB { s.in(false);
+tlcb: T_LCB {
+			  s.output_in();
+			  s.in(false);
+			  if (s.sp == 1)
+			  {
+		          s.stack[s.sp].add_slot("ra");
+			  }
 			if (!id_list.empty())
 			{
-				for (int i = 0; i < id_list.size(); i++)
+				for (int i = id_list.size() - 1; i >= 0 ; i--)
 				{
 					s.stack[s.sp].add_var(id_list[i]);
 				}
@@ -558,7 +562,14 @@ tlsb: T_LSB { }
 tlt: T_LT {}
 tnew: T_NEW {}
 tnull: T_NULL {}
-trcb: T_RCB { $$ = s.out(false);}
+trcb: T_RCB {
+	if (s.sp == 1)
+	{
+		end_function("zero");
+	}
+	s.out(false);
+	$$ = s.output_out();
+	}
 treturn: T_RETURN {}
 trot: T_ROT {}
 trparen: T_RPAREN {$$ = s.output_out(); }
@@ -575,13 +586,33 @@ twhile: T_WHILE {
 
 	
 %%
-int add_arg(string reg)
+
+int end_function(string reg)
 {
-	arg_cnt++;
+	s.add_cmd("move $a3, $" + reg);
+	if (reg != "zero")
+	{
+		s.stack[s.sp].remove_slot(reg);
+	}
+	while (true)
+	{
+		if (s.stack[s.sp].call_fun)
+		{
+			break;
+		}
+		s.out(false);
+	}
+ 	s.add_cmd("move $v0, $a3"); /*save return*/
+	s.add_cmd("j $ra");
+	//s.out(true);
+}
+
+int add_arg(string reg, int arg_cnt)
+{
 	stringstream ss;
-	ss << (-arg_cnt * Memory::step);
+	ss << (-arg_cnt * Memory::step - Memory::step);
 	s.add_cmd("sw $" + reg + ", " + ss.str() +"($sp)");
-	s.stack[s.sp-1].release_list.push_back(reg);
+	//s.stack[s.sp-1].release_list.push_back(reg);
 }
 
 

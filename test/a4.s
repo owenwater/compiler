@@ -29,7 +29,9 @@ syscall # 8
 li $v0, 4
 la $a0, enter # 8
 syscall # 8
-addu $sp, 0 # 9
+move $a3, $zero # 9
+move $v0, $a3 # 9
+j $ra # 9
 li $v0, 10 # 9
 syscall # 9
 
