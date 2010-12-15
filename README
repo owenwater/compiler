@@ -21,8 +21,17 @@ Run other decafe source:
 	./decafcc [file-name]
 	the MIPS code will be put into [file-name].o
 
+NEW Feature
+	0) more freedom while declare variable.
+		0.0) initialize variable during declare with comma.
+			e.g.
+				int a = 4, b = 5;
+		0.1) user can declare local variable with initialize and
+		     local array just like golbal variable
+		0.2) global variable and array now placed in heap.
+
 Current Feature:
-	0) global variable and array global declare and initialize (in stack)
+	0) global variable and array global declare and initialize
 	1) all method declare, "void main" shall be first
 	2) block nested
 	3) local variable declare (in stack)

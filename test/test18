@@ -1,0 +1,12 @@
+class A {
+	int a = 3, b = 4;
+	void main()
+	{
+		int c = 15, d = 16, a[10], i;
+		for (i = 0; i < 10; i = i + 1)
+		{
+			a[i] = i * 2 + 1;
+		}
+		callout("print_int", a[3], a[7], b, c, d);
+	}
+}

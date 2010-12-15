@@ -10,11 +10,11 @@ lui $s7, 0x1001
 li $t0, 11 # 2
 sw $t0, -4($s7) # 2
 li $t0, 21 # 6
-sw $t0, -8($sp) # 6
+sw $t0, -4($sp) # 6
 li $t0, 222 # 7
-sw $t0, -4($sp) # 7
-lw $t0, -8($sp) # 8
-lw $t1, -4($sp) # 8
+sw $t0, -8($sp) # 7
+lw $t0, -4($sp) # 8
+lw $t1, -8($sp) # 8
 move $a0, $t0 # 8
 li $v0, 1 # 8
 syscall # 8
@@ -27,7 +27,7 @@ syscall # 8
 li $v0, 4
 la $a0, enter # 8
 syscall # 8
-lw $t0, -8($sp) # 9
+lw $t0, -4($sp) # 9
 li $t1, 4 # 9
 sw $ra, -12($sp) # 9
 sw $t0, -16($sp) # 9
@@ -41,9 +41,9 @@ lw $ra, -12($sp) # 9
 lw $t0, -16($sp) # 9
 lw $t1, -20($sp) # 9
 move $t2, $v0 # 9
-sw $t2, -8($sp) # 9
-lw $t2, -8($sp) # 10
-lw $t3, -4($sp) # 10
+sw $t2, -4($sp) # 9
+lw $t2, -4($sp) # 10
+lw $t3, -8($sp) # 10
 move $a0, $t2 # 10
 li $v0, 1 # 10
 syscall # 10

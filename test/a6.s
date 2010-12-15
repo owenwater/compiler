@@ -13,13 +13,13 @@ move $t0, $v0 # 6
 li $v0, 5 # 7
 syscall # 7
 move $t1, $v0 # 7
-sw $t1, -8($sp) # 7
+sw $t1, -4($sp) # 7
 li $v0, 5 # 8
 syscall # 8
 move $t1, $v0 # 8
-sw $t1, -4($sp) # 8
-lw $t1, -8($sp) # 9
-lw $t2, -4($sp) # 9
+sw $t1, -8($sp) # 8
+lw $t1, -4($sp) # 9
+lw $t2, -8($sp) # 9
 move $a0, $t1 # 9
 li $v0, 1 # 9
 syscall # 9

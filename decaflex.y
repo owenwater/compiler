@@ -12,6 +12,7 @@
 	int loop_op(string op);
 	int add_arg(string reg, int arg_cnt);
 	int end_function(string reg);
+	int add_var_list();
 
 	bool for_loop;
 	
@@ -64,10 +65,19 @@ field_decl_list: field_decl_list field_decl {
 field_decl: type field_list {
 
 		  int i;
-		  for (i = id_list.size() - 1; i >= 0; i--)
+		 /* for (i = id_list.size() - 1; i >= 0; i--)
 		  {
 		  	int len = id_list[i].length();
-		  	if (id_list[i][len - 1] != ']')
+			if (id_list[i].find('=') != string::npos)
+			{
+				int index = id_list[i].find('=');
+				string id = id_list[i].substr(0,index);
+				string value = id_list[i].substr(index+1);
+				s.stack[s.sp].add_var(id);
+				s.stack[s.sp].set_var(id, value, s);
+				s.stack[s.sp].remove_slot(value);
+			}
+		  	else if (id_list[i][len - 1] != ']')
 			{
 				int rt = s.stack[s.sp].add_var(id_list[i]);
 			}
@@ -81,14 +91,16 @@ field_decl: type field_list {
 				ss >> l;
 				int rt = s.stack[s.sp].add_var(id, l);
 			}
+			
 		  }
-		  id_list.clear();
+		  id_list.clear();*/
+		  add_var_list();
 		  }
-		   |type id T_ASSIGN constant tsemicolon{
+		   /*|type id T_ASSIGN constant tsemicolon{
 		   	int rt = s.stack[s.sp].add_var($2);
 			s.stack[s.sp].set_var($2, $4, s);
 			s.stack[s.sp].remove_slot($4);
-		   	   }
+		   	   }*/
 field_list: field tcomma field_list {
 		  }
 			| field tsemicolon {
@@ -99,6 +111,10 @@ field:  id {
 	    | id tlsb T_INTCONSTANT trsb  {
 		 id_list.push_back($1+"["+ $3+"]");
 		    }
+		| id T_ASSIGN constant {
+		id_list.push_back($1+"="+$3);
+		   }
+
 
 method_decl_list: method_decl_list method_decl {
 				}
@@ -141,20 +157,32 @@ var_decl_list: var_decl var_decl_list {
 			 }
 			 | {}
 
-var_decl: type  id id_comma_list tsemicolon   {
+var_decl: type  var id_comma_list tsemicolon   {
 			id_list.push_back($2);
-			for (int i = 0; i < id_list.size(); i++)
+		    add_var_list();
+			/*for (int i = 0; i < id_list.size(); i++)
 			{
 				int rt = s.stack[s.sp].add_var(id_list[i]);
 			}
-			id_list.clear();
+			id_list.clear();*/
 		}
 
-id_comma_list: tcomma id id_comma_list {
+id_comma_list: tcomma var id_comma_list {
 			 id_list.push_back($2)
 				}
 			   | {
 			   }
+var:id {
+		//id_list.push_back($1);
+		$$ = $1;
+			}
+	    | id tlsb T_INTCONSTANT trsb  {
+		 $$ = $1+"["+ $3+"]";
+		    }
+		| id T_ASSIGN constant {
+		$$ = $1+"="+$3;
+		   }
+
 type:  T_INT { $$ = "int";}
 	 | T_BOOL{ $$ = "bool";}
 
@@ -592,6 +620,40 @@ twhile: T_WHILE {
 
 	
 %%
+
+int add_var_list()
+{
+	  for (int i = id_list.size() - 1; i >= 0; i--)
+	  {
+		int len = id_list[i].length();
+		if (id_list[i].find('=') != string::npos)
+		{
+			int index = id_list[i].find('=');
+			string id = id_list[i].substr(0,index);
+			string value = id_list[i].substr(index+1);
+			s.stack[s.sp].add_var(id);
+			s.stack[s.sp].set_var(id, value, s);
+			s.stack[s.sp].remove_slot(value);
+		}
+		else if (id_list[i][len - 1] != ']')
+		{
+			int rt = s.stack[s.sp].add_var(id_list[i]);
+		}
+		else
+		{
+			int index = id_list[i].find('[');
+			string id = id_list[i].substr(0, index);
+			stringstream ss(id_list[i].substr(index +1 
+									, len - index - 2));
+			int l;
+			ss >> l;
+			int rt = s.stack[s.sp].add_var(id, l);
+		}
+		
+	  }
+	  id_list.clear();
+
+}
 
 int end_function(string reg)
 {
