@@ -1,5 +1,5 @@
 b=1
-n=16
+n=17
 test_dir=test
 for ((i=b;i<=n;i++))
 do
@@ -9,3 +9,6 @@ do
 	spim -file $test_dir/a$i.s < $test_dir/input$i
 	echo ""
 done
+./a <$test_dir/quicksort.decaf > $test_dir/quicksort.s 2> $test_dir/quicksort.err
+spim -file $test_dir/quicksort.s < $test_dir/quicksort.in > $test_dir/quicksort.out
+

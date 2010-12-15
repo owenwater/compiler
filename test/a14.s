@@ -40,7 +40,8 @@ addu $sp, 20 # 9
 lw $ra, -12($sp) # 9
 lw $t0, -16($sp) # 9
 lw $t1, -20($sp) # 9
-sw $v0, -8($sp) # 9
+move $t2, $v0 # 9
+sw $t2, -8($sp) # 9
 lw $t2, -8($sp) # 10
 lw $t3, -4($sp) # 10
 move $a0, $t2 # 10

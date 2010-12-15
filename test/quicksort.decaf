@@ -1,0 +1,86 @@
+class Sort{
+
+	int a[100000];
+	void main()
+	{
+		int i, n;
+		n = callout("read_int");
+		for (i = 0; i < n; i = i + 1)
+		{
+			a[i] = callout("read_int");
+		}
+		sort(n);
+	}
+
+	void qsort( int p , int q)
+	{
+		int i, j, r, x, m;
+
+		if (p >= q) 
+		{
+			return ;
+		}
+
+		if (q - p <= 16)
+		{
+			int i, j;
+			for (i = p; i <= q; i = i + 1)
+			{
+				for (j = p; j <= i ; j = j + 1)
+				{
+					if (a[i] < a[j])
+					{
+						int m;
+						m = a[i];
+						a[i] = a[j];
+						a[j] = m;
+					}
+
+				}
+			}
+			return ;
+		}
+
+		r = (q-p+1) / 3 + p;
+		
+		m = a[r];
+		a[r] = a[q];
+		a[q] = a[r];
+
+		x = a[q];
+
+		i = p - 1;
+		for (j = p ; j <= q-1; j = j + 1)
+		{
+			if (a[j] <= x)
+			{
+				i = i + 1;
+				m = a[i];
+				a[i] = a[j];
+				a[j] = m;
+			}
+		}
+
+		m = a[i+1];
+		a[i+1] = a[q];
+		a[q] = m;
+
+		qsort(p , i );
+		qsort(i+2, q);
+		
+		return ;
+	}
+
+	void sort(int n)
+	{
+		int i;
+		qsort(0, n-1);
+		for (i = 0 ; i < n ; i = i + 1)
+		{
+			callout("print_int", a[i]);
+		}
+
+		return ;
+	}
+
+}

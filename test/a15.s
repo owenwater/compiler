@@ -16,7 +16,8 @@ jal f # 6
 addu $sp, 12 # 6
 lw $ra, -8($sp) # 6
 lw $t0, -12($sp) # 6
-sw $v0, -4($sp) # 6
+move $t1, $v0 # 6
+sw $t1, -4($sp) # 6
 lw $t1, -4($sp) # 7
 move $a0, $t1 # 7
 li $v0, 1 # 7
@@ -35,7 +36,8 @@ addu $sp, 16 # 8
 lw $ra, -8($sp) # 8
 lw $t0, -12($sp) # 8
 lw $t1, -16($sp) # 8
-sw $v0, -4($sp) # 8
+move $t2, $v0 # 8
+sw $t2, -4($sp) # 8
 lw $t2, -4($sp) # 9
 move $a0, $t2 # 9
 li $v0, 1 # 9

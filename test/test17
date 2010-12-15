@@ -1,0 +1,10 @@
+class A {
+	void main()
+	{
+		callout("print_int", f(4)+f(5)*f(6));
+	}
+	int f(int a)
+	{
+		return a + a;
+	}
+}

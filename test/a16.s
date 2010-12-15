@@ -30,7 +30,8 @@ sw $t0, -4($sp) # 9
 jal f # 9
 addu $sp, 8 # 9
 lw $t0, -8($sp) # 9
-sw $v0, -4($sp) # 9
+move $t1, $v0 # 9
+sw $t1, -4($sp) # 9
 lw $t1, 8($sp) # 10
 lw $t2, -4($sp) # 10
 move $a0, $t1 # 10
@@ -126,7 +127,8 @@ jal f # 25
 addu $sp, 8 # 25
 lw $t0, -4($sp) # 25
 lw $t1, -8($sp) # 25
-mul $t0, $t0, $v0 # 25
+move $t2, $v0 # 25
+mul $t0, $t0, $t2 # 25
 move $a3, $t0 # 25
 addu $sp, 12 # 25
 lw $ra, -8($sp) # 25

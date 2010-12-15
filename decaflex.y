@@ -307,7 +307,9 @@ method_call: method_name tlparen expr_comma_list trparen {
 			{
 			}
 			s.stack[s.sp].release_list.clear();
-			string ret("v0");
+			//string ret("v0");
+			string ret = s.stack[s.sp].find_slot();
+			s.add_cmd("move $"+ ret+", $v0"); 
 			$$ = ret;
 
 			}
@@ -349,7 +351,9 @@ callout_arg_list: stringconstant callout_arg_comma_list {
 					catch (const char *s){}
 					s.add_cmd("li $v0, 5");
 					s.add_cmd("syscall");
-					string ret("v0");
+					//string ret("v0");
+					string ret = s.stack[s.sp].find_slot();
+					s.add_cmd("move $"+ ret+", $v0"); 
 					$$ = ret;
 				}
 				else
@@ -411,8 +415,8 @@ expr: lvalue {
 		}
 	  }
 	  | method_call {
-	    if ($1 != "zero")
-		    s.stack[s.sp].add_slot($1);
+	    //if ($1 != "zero")
+		//    s.stack[s.sp].add_slot($1);
 	  	$$ = $1;
 	  }
 	  | constant {
