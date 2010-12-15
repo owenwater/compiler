@@ -23,7 +23,8 @@ parser.hpp: decaflex.y
 	$(YYAC) -oparser.cpp decaflex.y -d -t 
 
 run:
-	./run.sh
+	./run.sh > check
+	diff check test_result
 
 clean:
 	rm *.cpp *.hpp *.gch *.o a 

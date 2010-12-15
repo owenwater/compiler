@@ -251,9 +251,18 @@ statement:
 			s.loop_out();
 		 }
 		 | treturn opt_expr tsemicolon {
-		 	s.add_cmd("move $v0, $" + $2);
+		 	s.add_cmd("move $a3, $" + $2);
 			if ($2 != "zero")
 				s.stack[s.sp].remove_slot($2);
+			while (true)
+			{
+				if (s.stack[s.sp].call_fun)
+				{
+					break;
+				}
+				s.out(false);
+			}
+		 	s.add_cmd("move $v0, $a3");
 			s.add_cmd("j $ra");
 		 	
 		 }
@@ -295,6 +304,8 @@ assign:	lvalue T_ASSIGN expr {
 	  	}
 
 method_call: method_name tlparen expr_comma_list trparen {
+		    s.stack[s.sp].add_slot("ra");
+		   	s.add_cmd("jal " + $1);
 			s.out(true);
 			for (int i = 0 ; i < s.stack[s.sp].release_list.size(); i++)
 			{
