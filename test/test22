@@ -1,0 +1,26 @@
+class A {
+	
+	void main()
+	{
+		int a = 3, b[3];
+		a++;
+		callout("print_int", a);
+		b[1] = ++a;
+		callout("print_int", a);
+		callout("print_str", "===");
+		callout("print_int", b[1]);
+		b[1]--;
+		callout("print_int", b[1]);
+		--b[1];
+		callout("print_int", b[1]);
+		callout("print_str", "===");
+		b[0] = 0;
+		callout("print_int", a, b[0], b[1]);
+		b[0] = +a+++b[1];
+		callout("print_int", a, b[0], b[1]);
+		b[2] = a+(++b[1]);
+		callout("print_int", a, b[2], b[1]);
+		
+		
+	}
+}

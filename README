@@ -55,8 +55,19 @@ NEW Feature
 		3.1) method call
 			int main(){ f();}
 			int f() {return 3;}
-
-
+	4) more operator  support.
+		4.0) self increment and decrement with ++, --.
+			  P.S. both ++a, a++ will increase a by one and return a+1
+			  	e.g.
+					a = 3;
+					b = a++; //a = 4, b = 4
+					=====
+					a = 3
+					b = ++a; //a = 4, b = 4
+				and it is same with --.
+		4.1) unary sign operator + (only has - before)
+			e.g.
+				+a+3
 
 Current Feature:
 	0) global variable and array global declare and initialize

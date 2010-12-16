@@ -42,7 +42,8 @@
 %left T_MINUS T_PLUS
 %left T_DIV T_MOD T_MULT 
 %left T_NOT
-%left T_UMINUS
+%right T_UMINUS T_UPLUS
+%right T_INCREASE T_DECREASE
 %right T_LPAREN T_RPAREN
 %right T_LSB T_RSB
 %right T_LCB T_RCB
@@ -282,8 +283,10 @@ for_third_part: assign_comma_list {
 			  }
 
 assign_comma_list: assign tcomma assign_comma_list {
+				 	s.stack[s.sp].remove_slot($1);
 				 }
 				 | assign {
+				 	s.stack[s.sp].remove_slot($1);
 				 }
 assign:	lvalue T_ASSIGN expr {
 			int len = $1.length();
@@ -416,7 +419,9 @@ method_name: id {
 		   //TODO: method exist check
 		   }
 
-lvalue: id { $$ = $1;}
+lvalue: id { 
+	  $$ = $1;
+	  }
 	  | id tlsb expr trsb {
 	    $$ = $1 + "[" + $3 +"]";
 	  }
@@ -508,6 +513,9 @@ expr: lvalue {
 	  	s.add_cmd("sub $" + $2 + ", $0, $" + $2);
 		$$ = $2;
 	  }
+	  | T_PLUS expr %prec T_UPLUS {
+		$$ = $2;	  
+	  }
 	  | T_NOT expr {
 		s.add_cmd("xori $"+$2+", $"+$2+", 1");
 		$$ = $2;
@@ -546,11 +554,28 @@ expr: lvalue {
 	  | expr T_NEQ expr {
 	  	$$ = cmp_cmd("bne", $1, $3);
 	  }
-
 	  | tlparen expr trparen {
 	  s.add_cmd($3);
 	  $$ = $2;
 	  }
+	  | T_INCREASE lvalue {
+	  	string one = s.stack[s.sp].new_value(1, s);
+		$$ = op_assign("add", $2, one);
+	  }
+	  | lvalue T_INCREASE{
+	  	string one = s.stack[s.sp].new_value(1, s);
+		$$ = op_assign("add", $1, one);
+	  }
+	  | T_DECREASE lvalue {
+	  	string one = s.stack[s.sp].new_value(1, s);
+		$$ = op_assign("sub", $2, one);
+	  }
+	  | lvalue T_DECREASE{
+	  	string one = s.stack[s.sp].new_value(1, s);
+		$$ = op_assign("sub", $1, one);
+	  }
+
+
 constant: T_INTCONSTANT {
 			stringstream ss($1);
 			int value;

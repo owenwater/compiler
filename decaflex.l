@@ -1,4 +1,5 @@
 
+
 s [ \f\n\r\t\v]
 d [0-9]
 w [a-zA-Z0-9]
@@ -184,6 +185,8 @@ int errorprint(int ecode)
 <NORMAL>"|=" {yylval = "|="; pos += 2; return T_OR_ASSIGN;}
 <NORMAL>"<<=" {yylval = "<<="; pos += 3; return T_LEFTSHIFT_ASSIGN;}
 <NORMAL>">>=" {yylval = ">>="; pos += 3; return T_RIGHTSHIFT_ASSIGN;}
+<NORMAL>"++" {yylval ="++"; pos += 2; return T_INCREASE;}
+<NORMAL>"--" {yylval ="--"; pos += 2; return T_DECREASE;}
 
 <NORMAL>[a-zA-Z_][a-zA-Z_0-9]* {string s(yytext); yylval = s;
 									pos += s.length();
