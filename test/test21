@@ -1,0 +1,22 @@
+class A {
+	
+	void main()
+	{
+		callout("read_int");
+		3+4;
+		f();
+		g();
+		callout("read_int");
+		int a = 1, b = 1, c;
+		callout("print_int", a, b);
+		c = a += b -= 4;
+		callout("print_int",  a, b, c);
+	}
+	int f()
+	{
+		return 3;
+	}
+	int g()
+	{
+	}
+}

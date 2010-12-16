@@ -13,19 +13,21 @@ li $t0, 0 # 6
 sw $t0, -4($sp) # 6
 for_begin0: # 11
  # 6
-lw $t0, -4($sp) # 6
-li $t1, 10 # 6
-ble $t0, $t1, cmp0 # 6
-li $t0, 0 # 6
+lw $t1, -4($sp) # 6
+li $t2, 10 # 6
+ble $t1, $t2, cmp0 # 6
+li $t1, 0 # 6
 j cmp_end0 # 6
 cmp0: # 6
-li $t0, 1 # 6
+li $t1, 1 # 6
 cmp_end0: # 6
-beq $t0, $zero, loop_end0 # 11
+beq $t1, $zero, loop_end0 # 11
 sw $ra, -8($sp) # 7
 sw $t0, -12($sp) # 7
-subu $sp, 12 # 7
-lw $t0, 8($sp) # 9
+sw $t1, -16($sp) # 7
+sw $t2, -20($sp) # 7
+subu $sp, 20 # 7
+lw $t0, 16($sp) # 9
 sw $t0, -8($sp) # 9
 subu $sp, 8 # 9
 sw $t0, -4($sp) # 9
@@ -34,7 +36,7 @@ addu $sp, 8 # 9
 lw $t0, -8($sp) # 9
 move $t1, $v0 # 9
 sw $t1, -4($sp) # 9
-lw $t1, 8($sp) # 10
+lw $t1, 16($sp) # 10
 lw $t2, -4($sp) # 10
 move $a0, $t1 # 10
 li $v0, 1 # 10
@@ -48,15 +50,17 @@ syscall # 10
 li $v0, 4
 la $a0, enter # 10
 syscall # 10
-addu $sp, 12 # 11
+addu $sp, 20 # 11
 lw $ra, -8($sp) # 11
 lw $t0, -12($sp) # 11
+lw $t1, -16($sp) # 11
+lw $t2, -20($sp) # 11
 loop_begin0: # 11
  # 6
-lw $t1, -4($sp) # 6
-li $t2, 1 # 6
-add $t1, $t1, $t2 # 6
-sw $t1, -4($sp) # 6
+lw $t2, -4($sp) # 6
+li $t3, 1 # 6
+add $t2, $t2, $t3 # 6
+sw $t2, -4($sp) # 6
 j for_begin0 # 11
 loop_end0: # 11
 move $a3, $zero # 12

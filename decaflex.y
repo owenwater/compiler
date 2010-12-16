@@ -167,9 +167,17 @@ statement_list: statement statement_list{
 statement:
 		 var_decl {
 		 }
-		 |assign tsemicolon {
+		 |expr tsemicolon {
+		 	if ($1 != "zero")
+			{
+				s.stack[s.sp].remove_slot($1);
+			}
 		 }
 		 |method_call tsemicolon {
+		 	if ($1 != "zero")
+			{
+				s.stack[s.sp].remove_slot($1);
+			}
 		 }
 		 |tif tlparen expr trparen block {
 		 	if_cnt++;
@@ -290,8 +298,8 @@ assign:	lvalue T_ASSIGN expr {
 	  			s.stack[s.sp].set_var($1, $3, s);
 			}
 			
-			s.stack[s.sp].remove_slot($3);
-			$$ = $1;
+			//s.stack[s.sp].remove_slot($3);
+			$$ = $3;
 	  	}
 		|lvalue T_PLUS_ASSIGN expr {
 			$$ = op_assign("add", $1, $3);
@@ -442,6 +450,9 @@ expr: lvalue {
 		{
 			$$ = s.stack[s.sp].get_var($1,s);
 		}
+	  }
+	  | assign {
+			$$ = $1;	  
 	  }
 	  | method_call {
 	    //if ($1 != "zero")
@@ -667,9 +678,9 @@ string op_assign(string op, string value, string expr)
 
 		s.stack[s.sp].set_var(value, reg, s);
 	}
-	s.stack[s.sp].remove_slot(reg);
+	//s.stack[s.sp].remove_slot(reg);
 	s.stack[s.sp].remove_slot(expr);
-	return value;
+	return reg;
 
 }
 
