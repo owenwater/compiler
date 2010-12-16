@@ -187,6 +187,8 @@ int errorprint(int ecode)
 <NORMAL>">>=" {yylval = ">>="; pos += 3; return T_RIGHTSHIFT_ASSIGN;}
 <NORMAL>"++" {yylval ="++"; pos += 2; return T_INCREASE;}
 <NORMAL>"--" {yylval ="--"; pos += 2; return T_DECREASE;}
+<NORMAL>"fun" {yylval ="fun"; pos +=3; return T_FUN;}
+<NORMAL>"&" {yylval = "&"; pos += 1; return T_ADDRESS;}
 
 <NORMAL>[a-zA-Z_][a-zA-Z_0-9]* {string s(yytext); yylval = s;
 									pos += s.length();

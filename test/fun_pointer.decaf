@@ -1,0 +1,21 @@
+class A {
+	
+	void main()
+	{
+		g(&f1);
+		g(&f2);
+		callout("print_int", &f1, &f2);
+	}
+	int f1()
+	{
+		callout("print_str", "function1");
+	}
+	int f2()
+	{
+		callout("print_str", "function2");
+	}
+	int g(fun a)
+	{
+		a();
+	}
+}

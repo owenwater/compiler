@@ -3,7 +3,7 @@ space:
 .asciiz " "
 enter:
 .asciiz "\n"
-str0:
+_str0:
 .asciiz "Hello World"
 
 .text
@@ -46,7 +46,7 @@ li $v0, 4
 la $a0, enter # 8
 syscall # 8
 li $v0, 4
-la $a0, str0 # 9
+la $a0, _str0 # 9
 syscall # 9
 li $v0, 4
 la $a0, space # 9

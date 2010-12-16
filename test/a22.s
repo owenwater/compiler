@@ -3,10 +3,10 @@ space:
 .asciiz " "
 enter:
 .asciiz "\n"
-str0:
+_str0:
 .asciiz "==="
 
-str1:
+_str1:
 .asciiz "==="
 
 .text
@@ -45,7 +45,7 @@ li $v0, 4
 la $a0, enter # 9
 syscall # 9
 li $v0, 4
-la $a0, str0 # 10
+la $a0, _str0 # 10
 syscall # 10
 li $v0, 4
 la $a0, space # 10
@@ -111,7 +111,7 @@ li $v0, 4
 la $a0, enter # 15
 syscall # 15
 li $v0, 4
-la $a0, str1 # 16
+la $a0, _str1 # 16
 syscall # 16
 li $v0, 4
 la $a0, space # 16

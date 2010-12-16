@@ -13,16 +13,16 @@ li $t0, 0 # 6
 sw $t0, -4($sp) # 6
 li $t0, 0 # 7
 sw $t0, -8($sp) # 7
-loop_begin0: # 15
+_loop_begin0: # 15
 lw $t0, -8($sp) # 8
 li $t1, 10 # 8
-blt $t0, $t1, cmp0 # 8
+blt $t0, $t1, _cmp0 # 8
 li $t0, 0 # 8
-j cmp_end0 # 8
-cmp0: # 8
+j _cmp_end0 # 8
+_cmp0: # 8
 li $t0, 1 # 8
-cmp_end0: # 8
-beq $t0, $zero, loop_end0 # 15
+_cmp_end0: # 8
+beq $t0, $zero, _loop_end0 # 15
 sw $ra, -12($sp) # 9
 sw $t0, -16($sp) # 9
 subu $sp, 16 # 9
@@ -53,8 +53,8 @@ sw $t0, -4($sp) # 14
 addu $sp, 16 # 15
 lw $ra, -12($sp) # 15
 lw $t0, -16($sp) # 15
-j loop_begin0 # 15
-loop_end0: # 15
+j _loop_begin0 # 15
+_loop_end0: # 15
 move $a3, $zero # 16
 move $v0, $a3 # 16
 j $ra # 16

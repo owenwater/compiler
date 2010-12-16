@@ -21,7 +21,7 @@ Run other decafe source:
 	./decafcc [file-name]
 	the MIPS code will be put into [file-name].o
 
-NEW Feature
+NEW Feature:
 	0) more freedom while declare variable.
 		0.0) declare variable with initialization with comma.
 			e.g.
@@ -68,6 +68,30 @@ NEW Feature
 		4.1) unary sign operator + (only has - before)
 			e.g.
 				+a+3
+		4.2) get address of function &
+			e.g.
+				int main
+				{
+					&f;
+				}
+				int f(){}
+	5) new type of variable "fun". Used to record the address of function
+	6) transmit function address as parameter
+		e.g.
+			int main()
+			{
+				g(&f);
+			}
+			int g(fun a)
+			{
+				a()
+			}
+			int f()
+			{
+			}
+		see more details about how it work in:
+			./test/fun_pointer.decaf
+		
 
 Current Feature:
 	0) global variable and array global declare and initialize
@@ -114,7 +138,6 @@ Current Feature:
 		8.1) recursive
 
 TODO List:
-	0) call user function
 	1) rot(6.a)
 	2) type check
 	3) "void main" function check

@@ -21,7 +21,8 @@
 	vector <string> args_list;
 	vector <string> string_record;
 	vector <string> id_list;
-	string for_split = "@@";
+	const string for_split = "@@";
+	const char fun_tag = '~';
 	
 	int if_cnt, loop_cnt, cmp_cnt;
 %}
@@ -32,7 +33,7 @@
 
 %token T_COMMA
 %right T_ASSIGN T_PLUS_ASSIGN T_MINUS_ASSIGN T_MULT_ASSIGN T_DIV_ASSIGN T_MOD_ASSIGN T_AND_ASSIGN T_OR_ASSIGN T_LEFTSHIFT_ASSIGN T_RIGHTSHIFT_ASSIGN
-%token T_BOOL T_BREAK T_CALLOUT T_CONTINUE T_CLASS T_COMMENT T_DOT T_ELSE T_WQ T_EXTENDS T_FOR T_IF T_NEW T_NULL T_RETURN T_SEMICOLON T_VOID T_WHILE T_INT 
+%token T_BOOL T_BREAK T_CALLOUT T_CONTINUE T_CLASS T_COMMENT T_DOT T_ELSE T_WQ T_EXTENDS T_FOR T_IF T_NEW T_NULL T_RETURN T_SEMICOLON T_VOID T_WHILE T_INT T_FUN
 %left T_CHARCONSTANT T_FALSE T_INTCONSTANT T_TRUE T_STRINGCONSTANT T_ID
 %left T_OR
 %left T_AND
@@ -43,6 +44,7 @@
 %left T_DIV T_MOD T_MULT 
 %left T_NOT
 %right T_UMINUS T_UPLUS
+%right T_ADDRESS
 %right T_INCREASE T_DECREASE
 %right T_LPAREN T_RPAREN
 %right T_LSB T_RSB
@@ -121,6 +123,9 @@ param_comma_list: param tcomma param_comma_list {
 				}
 param: type id {
 	 				id_list.push_back($2);
+				}
+		|T_FUN id {
+					id_list.push_back($2);
 				}
 
 block: tlcb var_decl_list statement_list trcb {
@@ -334,6 +339,7 @@ assign:	lvalue T_ASSIGN expr {
 
 method_call: method_name tlparen expr_comma_list trparen {
 		   //user method call
+		    bool flag = false;
 		    s.add_cmd($4);
 		    s.in(true);
 			for (int i = 0; i < s.stack[s.sp-1].release_list.size(); i++)
@@ -345,6 +351,7 @@ method_call: method_name tlparen expr_comma_list trparen {
 			s.out(2);
 			for (int i = 0 ; i < s.stack[s.sp].release_list.size(); i++)
 			{
+				s.stack[s.sp].remove_slot(s.stack[s.sp].release_list[i]);
 			}
 			s.stack[s.sp].release_list.clear();
 			//string ret("v0");
@@ -415,7 +422,15 @@ callout_arg: expr {
 		   $$ = $1;
 			}
 method_name: id {
-		   $$ = $1;
+		   try{
+		   	string reg = s.stack[s.sp].get_var($1, s);
+			s.stack[s.sp].release_list.push_back(reg);
+			$$ = "$"+reg;
+		   }
+		   catch (...)
+		   {
+		   		$$ = $1;
+		   }
 		   //TODO: method exist check
 		   }
 
@@ -573,6 +588,11 @@ expr: lvalue {
 	  | lvalue T_DECREASE{
 	  	string one = s.stack[s.sp].new_value(1, s);
 		$$ = op_assign("sub", $1, one);
+	  }
+	  | T_ADDRESS id{
+	  	string reg = s.stack[s.sp].find_slot();
+		s.add_cmd("la $"+reg+", " + $2);
+		$$ = reg;
 	  }
 
 
@@ -807,7 +827,7 @@ string get_tag(int i, string s)
 	stringstream ss;
 	ss << i;
 	string tag(ss.str());
-	tag = s+tag;
+	tag = "_"+s+tag;
 	return tag;
 }
 

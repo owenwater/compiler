@@ -15,17 +15,17 @@ move $t0, $v0 # 7
 sw $t0, -8($sp) # 7
 li $t0, 0 # 8
 sw $t0, -4($sp) # 8
-for_begin0: # 11
+_for_begin0: # 11
  # 8
 lw $t0, -4($sp) # 8
 lw $t1, -8($sp) # 8
-blt $t0, $t1, cmp0 # 8
+blt $t0, $t1, _cmp0 # 8
 li $t0, 0 # 8
-j cmp_end0 # 8
-cmp0: # 8
+j _cmp_end0 # 8
+_cmp0: # 8
 li $t0, 1 # 8
-cmp_end0: # 8
-beq $t0, $zero, loop_end0 # 11
+_cmp_end0: # 8
+beq $t0, $zero, _loop_end0 # 11
 sw $ra, -12($sp) # 9
 sw $t0, -16($sp) # 9
 subu $sp, 16 # 9
@@ -40,14 +40,14 @@ add $s7, $s7, $t0 # 10
 addu $sp, 16 # 11
 lw $ra, -12($sp) # 11
 lw $t0, -16($sp) # 11
-loop_begin0: # 11
+_loop_begin0: # 11
  # 8
 lw $t1, -4($sp) # 8
 li $t2, 1 # 8
 add $t1, $t1, $t2 # 8
 sw $t1, -4($sp) # 8
-j for_begin0 # 11
-loop_end0: # 11
+j _for_begin0 # 11
+_loop_end0: # 11
 lw $t0, -8($sp) # 12
 sw $ra, -12($sp) # 12
 sw $t0, -16($sp) # 12
@@ -57,7 +57,7 @@ jal sort # 12
 addu $sp, 16 # 12
 lw $ra, -12($sp) # 12
 lw $t0, -16($sp) # 12
-move $t1, $v0 # 12
+move $t0, $v0 # 12
 move $a3, $zero # 13
 move $v0, $a3 # 13
 j $ra # 13
@@ -66,14 +66,14 @@ syscall # 13
 qsort: # 72
 lw $t0, -8($sp) # 19
 lw $t1, -4($sp) # 19
-bge $t0, $t1, cmp1 # 19
+bge $t0, $t1, _cmp1 # 19
 li $t0, 0 # 19
-j cmp_end1 # 19
-cmp1: # 19
+j _cmp_end1 # 19
+_cmp1: # 19
 li $t0, 1 # 19
-cmp_end1: # 19
-beq $t0, $zero, end_if0 # 24
-then0: # 24
+_cmp_end1: # 19
+beq $t0, $zero, _end_if0 # 24
+_then0: # 24
 sw $ra, -32($sp) # 20
 sw $t0, -36($sp) # 20
 subu $sp, 36 # 20
@@ -86,50 +86,50 @@ j $ra # 21
 addu $sp, 36 # 22
 lw $ra, -32($sp) # 22
 lw $t0, -36($sp) # 22
-end_if0: # 24
+_end_if0: # 24
 lw $t0, -4($sp) # 24
 lw $t1, -8($sp) # 24
 sub $t0, $t0, $t1 # 24
 li $t1, 16 # 24
-ble $t0, $t1, cmp2 # 24
+ble $t0, $t1, _cmp2 # 24
 li $t0, 0 # 24
-j cmp_end2 # 24
-cmp2: # 24
+j _cmp_end2 # 24
+_cmp2: # 24
 li $t0, 1 # 24
-cmp_end2: # 24
-beq $t0, $zero, end_if2 # 44
-then2: # 44
+_cmp_end2: # 24
+beq $t0, $zero, _end_if2 # 44
+_then2: # 44
 sw $ra, -32($sp) # 25
 sw $t0, -36($sp) # 25
 subu $sp, 36 # 25
 lw $t0, 28($sp) # 27
 sw $t0, -4($sp) # 27
-for_begin2: # 40
+_for_begin2: # 40
  # 27
 lw $t0, -4($sp) # 27
 lw $t1, 32($sp) # 27
-ble $t0, $t1, cmp3 # 27
+ble $t0, $t1, _cmp3 # 27
 li $t0, 0 # 27
-j cmp_end3 # 27
-cmp3: # 27
+j _cmp_end3 # 27
+_cmp3: # 27
 li $t0, 1 # 27
-cmp_end3: # 27
-beq $t0, $zero, loop_end2 # 40
+_cmp_end3: # 27
+beq $t0, $zero, _loop_end2 # 40
 sw $t0, -12($sp) # 28
 subu $sp, 12 # 28
 lw $t0, 40($sp) # 29
 sw $t0, 4($sp) # 29
-for_begin1: # 39
+_for_begin1: # 39
  # 29
 lw $t0, 4($sp) # 29
 lw $t1, 8($sp) # 29
-ble $t0, $t1, cmp4 # 29
+ble $t0, $t1, _cmp4 # 29
 li $t0, 0 # 29
-j cmp_end4 # 29
-cmp4: # 29
+j _cmp_end4 # 29
+_cmp4: # 29
 li $t0, 1 # 29
-cmp_end4: # 29
-beq $t0, $zero, loop_end1 # 39
+_cmp_end4: # 29
+beq $t0, $zero, _loop_end1 # 39
 sw $t0, -4($sp) # 30
 subu $sp, 4 # 30
 lw $t0, 12($sp) # 31
@@ -142,14 +142,14 @@ sll $t0, $t0, 2 # 31
 sub $s7, $s7, $t0 # 31
 lw $t2, -4($s7) # 31
 add $s7, $s7, $t0 # 31
-blt $t1, $t2, cmp5 # 31
+blt $t1, $t2, _cmp5 # 31
 li $t1, 0 # 31
-j cmp_end5 # 31
-cmp5: # 31
+j _cmp_end5 # 31
+_cmp5: # 31
 li $t1, 1 # 31
-cmp_end5: # 31
-beq $t1, $zero, end_if1 # 39
-then1: # 39
+_cmp_end5: # 31
+beq $t1, $zero, _end_if1 # 39
+_then1: # 39
 sw $t1, -4($sp) # 32
 subu $sp, 4 # 32
 lw $t0, 16($sp) # 34
@@ -176,27 +176,27 @@ sw $t1, -4($s7) # 36
 add $s7, $s7, $t0 # 36
 addu $sp, 4 # 37
 lw $t1, -4($sp) # 37
-end_if1: # 39
+_end_if1: # 39
 addu $sp, 4 # 39
 lw $t0, -4($sp) # 39
-loop_begin1: # 39
+_loop_begin1: # 39
  # 29
 lw $t1, 4($sp) # 29
 li $t2, 1 # 29
 add $t1, $t1, $t2 # 29
 sw $t1, 4($sp) # 29
-j for_begin1 # 39
-loop_end1: # 39
+j _for_begin1 # 39
+_loop_end1: # 39
 addu $sp, 12 # 40
 lw $t0, -12($sp) # 40
-loop_begin2: # 40
+_loop_begin2: # 40
  # 27
 lw $t1, -4($sp) # 27
 li $t2, 1 # 27
 add $t1, $t1, $t2 # 27
 sw $t1, -4($sp) # 27
-j for_begin2 # 40
-loop_end2: # 40
+j _for_begin2 # 40
+_loop_end2: # 40
 move $a3, $zero # 41
 addu $sp, 36 # 41
 lw $ra, -32($sp) # 41
@@ -206,7 +206,7 @@ j $ra # 41
 addu $sp, 36 # 42
 lw $ra, -32($sp) # 42
 lw $t0, -36($sp) # 42
-end_if2: # 44
+_end_if2: # 44
 lw $t0, -4($sp) # 44
 lw $t1, -8($sp) # 44
 sub $t0, $t0, $t1 # 44
@@ -256,19 +256,19 @@ sub $t0, $t0, $t1 # 52
 sw $t0, -12($sp) # 52
 lw $t0, -8($sp) # 53
 sw $t0, -16($sp) # 53
-for_begin3: # 62
+_for_begin3: # 62
  # 53
 lw $t0, -16($sp) # 53
 lw $t1, -4($sp) # 53
 li $t2, 1 # 53
 sub $t1, $t1, $t2 # 53
-ble $t0, $t1, cmp6 # 53
+ble $t0, $t1, _cmp6 # 53
 li $t0, 0 # 53
-j cmp_end6 # 53
-cmp6: # 53
+j _cmp_end6 # 53
+_cmp6: # 53
 li $t0, 1 # 53
-cmp_end6: # 53
-beq $t0, $zero, loop_end3 # 62
+_cmp_end6: # 53
+beq $t0, $zero, _loop_end3 # 62
 sw $ra, -32($sp) # 54
 sw $t0, -36($sp) # 54
 subu $sp, 36 # 54
@@ -278,14 +278,14 @@ sub $s7, $s7, $t0 # 55
 lw $t1, -4($s7) # 55
 add $s7, $s7, $t0 # 55
 lw $t0, 12($sp) # 55
-ble $t1, $t0, cmp7 # 55
+ble $t1, $t0, _cmp7 # 55
 li $t1, 0 # 55
-j cmp_end7 # 55
-cmp7: # 55
+j _cmp_end7 # 55
+_cmp7: # 55
 li $t1, 1 # 55
-cmp_end7: # 55
-beq $t1, $zero, end_if3 # 62
-then3: # 62
+_cmp_end7: # 55
+beq $t1, $zero, _end_if3 # 62
+_then3: # 62
 sw $t1, -4($sp) # 56
 subu $sp, 4 # 56
 lw $t0, 28($sp) # 57
@@ -316,18 +316,18 @@ sw $t1, -4($s7) # 60
 add $s7, $s7, $t0 # 60
 addu $sp, 4 # 61
 lw $t1, -4($sp) # 61
-end_if3: # 62
+_end_if3: # 62
 addu $sp, 36 # 62
 lw $ra, -32($sp) # 62
 lw $t0, -36($sp) # 62
-loop_begin3: # 62
+_loop_begin3: # 62
  # 53
 lw $t1, -16($sp) # 53
 li $t2, 1 # 53
 add $t1, $t1, $t2 # 53
 sw $t1, -16($sp) # 53
-j for_begin3 # 62
-loop_end3: # 62
+j _for_begin3 # 62
+_loop_end3: # 62
 lw $t0, -12($sp) # 64
 li $t1, 1 # 64
 add $t0, $t0, $t1 # 64
@@ -367,27 +367,23 @@ addu $sp, 40 # 68
 lw $ra, -32($sp) # 68
 lw $t0, -36($sp) # 68
 lw $t1, -40($sp) # 68
-move $t2, $v0 # 68
-lw $t2, -12($sp) # 69
-li $t3, 2 # 69
-add $t2, $t2, $t3 # 69
-lw $t3, -4($sp) # 69
+move $t0, $v0 # 68
+lw $t0, -12($sp) # 69
+li $t1, 2 # 69
+add $t0, $t0, $t1 # 69
+lw $t1, -4($sp) # 69
 sw $ra, -32($sp) # 69
 sw $t0, -36($sp) # 69
 sw $t1, -40($sp) # 69
-sw $t2, -44($sp) # 69
-sw $t3, -48($sp) # 69
-subu $sp, 48 # 69
-sw $t3, -4($sp) # 69
-sw $t2, -8($sp) # 69
+subu $sp, 40 # 69
+sw $t1, -4($sp) # 69
+sw $t0, -8($sp) # 69
 jal qsort # 69
-addu $sp, 48 # 69
+addu $sp, 40 # 69
 lw $ra, -32($sp) # 69
 lw $t0, -36($sp) # 69
 lw $t1, -40($sp) # 69
-lw $t2, -44($sp) # 69
-lw $t3, -48($sp) # 69
-move $t4, $v0 # 69
+move $t0, $v0 # 69
 move $a3, $zero # 71
 move $v0, $a3 # 71
 j $ra # 71
@@ -410,26 +406,24 @@ addu $sp, 20 # 77
 lw $ra, -12($sp) # 77
 lw $t0, -16($sp) # 77
 lw $t1, -20($sp) # 77
-move $t2, $v0 # 77
-li $t2, 0 # 78
-sw $t2, -8($sp) # 78
-for_begin4: # 81
+move $t0, $v0 # 77
+li $t0, 0 # 78
+sw $t0, -8($sp) # 78
+_for_begin4: # 81
  # 78
-lw $t2, -8($sp) # 78
-lw $t3, -4($sp) # 78
-blt $t2, $t3, cmp8 # 78
-li $t2, 0 # 78
-j cmp_end8 # 78
-cmp8: # 78
-li $t2, 1 # 78
-cmp_end8: # 78
-beq $t2, $zero, loop_end4 # 81
+lw $t0, -8($sp) # 78
+lw $t1, -4($sp) # 78
+blt $t0, $t1, _cmp8 # 78
+li $t0, 0 # 78
+j _cmp_end8 # 78
+_cmp8: # 78
+li $t0, 1 # 78
+_cmp_end8: # 78
+beq $t0, $zero, _loop_end4 # 81
 sw $ra, -12($sp) # 79
 sw $t0, -16($sp) # 79
-sw $t1, -20($sp) # 79
-sw $t2, -24($sp) # 79
-subu $sp, 24 # 79
-lw $t0, 16($sp) # 80
+subu $sp, 16 # 79
+lw $t0, 8($sp) # 80
 sll $t0, $t0, 2 # 80
 sub $s7, $s7, $t0 # 80
 lw $t1, -4($s7) # 80
@@ -440,19 +434,17 @@ syscall # 80
 li $v0, 4
 la $a0, enter # 80
 syscall # 80
-addu $sp, 24 # 81
+addu $sp, 16 # 81
 lw $ra, -12($sp) # 81
 lw $t0, -16($sp) # 81
-lw $t1, -20($sp) # 81
-lw $t2, -24($sp) # 81
-loop_begin4: # 81
+_loop_begin4: # 81
  # 78
-lw $t3, -8($sp) # 78
-li $t4, 1 # 78
-add $t3, $t3, $t4 # 78
-sw $t3, -8($sp) # 78
-j for_begin4 # 81
-loop_end4: # 81
+lw $t1, -8($sp) # 78
+li $t2, 1 # 78
+add $t1, $t1, $t2 # 78
+sw $t1, -8($sp) # 78
+j _for_begin4 # 81
+_loop_end4: # 81
 move $a3, $zero # 83
 move $v0, $a3 # 83
 j $ra # 83

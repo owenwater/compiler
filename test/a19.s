@@ -11,8 +11,8 @@ move $v1, $ra
 li $t0, 111 # 2
 sw $t0, -4($sp) # 2
 jal f # 2
-move $t1, $v0 # 2
-sw $t1, -4($s7) # 2
+move $t0, $v0 # 2
+sw $t0, -4($s7) # 2
 move $ra, $v1 # 3
 li $t0, 3 # 6
 sw $t0, -4($sp) # 6
@@ -52,11 +52,17 @@ jal f # 11
 addu $sp, 20 # 11
 lw $ra, -16($sp) # 11
 lw $t0, -20($sp) # 11
-move $t1, $v0 # 11
-sw $t1, -16($sp) # 11
-lw $t1, -12($sp) # 12
-lw $t2, -16($sp) # 12
-lw $t3, -4($s7) # 12
+move $t0, $v0 # 11
+sw $t0, -16($sp) # 11
+lw $t0, -12($sp) # 12
+lw $t1, -16($sp) # 12
+lw $t2, -4($s7) # 12
+move $a0, $t0 # 12
+li $v0, 1 # 12
+syscall # 12
+li $v0, 4
+la $a0, space # 12
+syscall # 12
 move $a0, $t1 # 12
 li $v0, 1 # 12
 syscall # 12
@@ -64,12 +70,6 @@ li $v0, 4
 la $a0, space # 12
 syscall # 12
 move $a0, $t2 # 12
-li $v0, 1 # 12
-syscall # 12
-li $v0, 4
-la $a0, space # 12
-syscall # 12
-move $a0, $t3 # 12
 li $v0, 1 # 12
 syscall # 12
 li $v0, 4

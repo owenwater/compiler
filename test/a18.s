@@ -19,17 +19,17 @@ sw $t0, -4($sp) # 5
 sw $t1, -8($sp) # 5
 li $t0, 0 # 6
 sw $t0, -52($sp) # 6
-for_begin0: # 9
+_for_begin0: # 9
  # 6
 lw $t0, -52($sp) # 6
 li $t1, 10 # 6
-blt $t0, $t1, cmp0 # 6
+blt $t0, $t1, _cmp0 # 6
 li $t0, 0 # 6
-j cmp_end0 # 6
-cmp0: # 6
+j _cmp_end0 # 6
+_cmp0: # 6
 li $t0, 1 # 6
-cmp_end0: # 6
-beq $t0, $zero, loop_end0 # 9
+_cmp_end0: # 6
+beq $t0, $zero, _loop_end0 # 9
 sw $ra, -56($sp) # 7
 sw $t0, -60($sp) # 7
 subu $sp, 60 # 7
@@ -46,14 +46,14 @@ add $sp, $sp, $t0 # 8
 addu $sp, 60 # 9
 lw $ra, -56($sp) # 9
 lw $t0, -60($sp) # 9
-loop_begin0: # 9
+_loop_begin0: # 9
  # 6
 lw $t1, -52($sp) # 6
 li $t2, 1 # 6
 add $t1, $t1, $t2 # 6
 sw $t1, -52($sp) # 6
-j for_begin0 # 9
-loop_end0: # 9
+j _for_begin0 # 9
+_loop_end0: # 9
 li $t0, 3 # 10
 sll $t0, $t0, 2 # 10
 sub $sp, $sp, $t0 # 10

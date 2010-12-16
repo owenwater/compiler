@@ -3,34 +3,34 @@ space:
 .asciiz " "
 enter:
 .asciiz "\n"
-str0:
+_str0:
 .asciiz "+"
 
-str1:
+_str1:
 .asciiz "-"
 
-str2:
+_str2:
 .asciiz "*"
 
-str3:
+_str3:
 .asciiz "/"
 
-str4:
+_str4:
 .asciiz "%"
 
-str5:
+_str5:
 .asciiz "&"
 
-str6:
+_str6:
 .asciiz "|"
 
-str7:
+_str7:
 .asciiz "<<"
 
-str8:
+_str8:
 .asciiz ">>"
 
-str9:
+_str9:
 .asciiz "arr"
 
 .text
@@ -64,7 +64,7 @@ lw $t1, -8($sp) # 9
 add $t1, $t1, $t0 # 9
 sw $t1, -8($sp) # 9
 li $v0, 4
-la $a0, str0 # 10
+la $a0, _str0 # 10
 syscall # 10
 li $v0, 4
 la $a0, space # 10
@@ -93,7 +93,7 @@ lw $t1, -8($sp) # 13
 sub $t1, $t1, $t0 # 13
 sw $t1, -8($sp) # 13
 li $v0, 4
-la $a0, str1 # 14
+la $a0, _str1 # 14
 syscall # 14
 li $v0, 4
 la $a0, space # 14
@@ -122,7 +122,7 @@ lw $t1, -8($sp) # 17
 mul $t1, $t1, $t0 # 17
 sw $t1, -8($sp) # 17
 li $v0, 4
-la $a0, str2 # 18
+la $a0, _str2 # 18
 syscall # 18
 li $v0, 4
 la $a0, space # 18
@@ -152,7 +152,7 @@ div $t1, $t0 # 21
 mflo $t1 # 21
 sw $t1, -8($sp) # 21
 li $v0, 4
-la $a0, str3 # 22
+la $a0, _str3 # 22
 syscall # 22
 li $v0, 4
 la $a0, space # 22
@@ -182,7 +182,7 @@ div $t1, $t0 # 25
 mfhi $t1 # 25
 sw $t1, -8($sp) # 25
 li $v0, 4
-la $a0, str4 # 26
+la $a0, _str4 # 26
 syscall # 26
 li $v0, 4
 la $a0, space # 26
@@ -211,7 +211,7 @@ lw $t1, -8($sp) # 29
 and $t1, $t1, $t0 # 29
 sw $t1, -8($sp) # 29
 li $v0, 4
-la $a0, str5 # 30
+la $a0, _str5 # 30
 syscall # 30
 li $v0, 4
 la $a0, space # 30
@@ -240,7 +240,7 @@ lw $t1, -8($sp) # 33
 or $t1, $t1, $t0 # 33
 sw $t1, -8($sp) # 33
 li $v0, 4
-la $a0, str6 # 34
+la $a0, _str6 # 34
 syscall # 34
 li $v0, 4
 la $a0, space # 34
@@ -269,7 +269,7 @@ lw $t1, -8($sp) # 37
 sllv $t1, $t1, $t0 # 37
 sw $t1, -8($sp) # 37
 li $v0, 4
-la $a0, str7 # 38
+la $a0, _str7 # 38
 syscall # 38
 li $v0, 4
 la $a0, space # 38
@@ -298,7 +298,7 @@ lw $t1, -8($sp) # 41
 srlv $t1, $t1, $t0 # 41
 sw $t1, -8($sp) # 41
 li $v0, 4
-la $a0, str8 # 42
+la $a0, _str8 # 42
 syscall # 42
 li $v0, 4
 la $a0, space # 42
@@ -357,7 +357,7 @@ sub $sp, $sp, $t1 # 46
 sw $t3, -12($sp) # 46
 add $sp, $sp, $t1 # 46
 li $v0, 4
-la $a0, str9 # 47
+la $a0, _str9 # 47
 syscall # 47
 li $v0, 4
 la $a0, space # 47

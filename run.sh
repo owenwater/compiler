@@ -11,4 +11,6 @@ do
 done
 ./a <$test_dir/quicksort.decaf > $test_dir/quicksort.s 2> $test_dir/quicksort.err
 spim -file $test_dir/quicksort.s < $test_dir/quicksort.in > $test_dir/quicksort.out
+./a <$test_dir/fun_pointer.decaf > $test_dir/fun_pointer.s 2> $test_dir/quicksort.err
+spim -file $test_dir/fun_pointer.s
 

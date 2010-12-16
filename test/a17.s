@@ -18,8 +18,20 @@ jal f # 4
 addu $sp, 8 # 4
 lw $ra, -4($sp) # 4
 lw $t0, -8($sp) # 4
+move $t0, $v0 # 4
+li $t1, 5 # 4
+sw $ra, -4($sp) # 4
+sw $t0, -8($sp) # 4
+sw $t1, -12($sp) # 4
+subu $sp, 12 # 4
+sw $t1, -4($sp) # 4
+jal f # 4
+addu $sp, 12 # 4
+lw $ra, -4($sp) # 4
+lw $t0, -8($sp) # 4
+lw $t1, -12($sp) # 4
 move $t1, $v0 # 4
-li $t2, 5 # 4
+li $t2, 6 # 4
 sw $ra, -4($sp) # 4
 sw $t0, -8($sp) # 4
 sw $t1, -12($sp) # 4
@@ -32,28 +44,10 @@ lw $ra, -4($sp) # 4
 lw $t0, -8($sp) # 4
 lw $t1, -12($sp) # 4
 lw $t2, -16($sp) # 4
-move $t3, $v0 # 4
-li $t4, 6 # 4
-sw $ra, -4($sp) # 4
-sw $t0, -8($sp) # 4
-sw $t1, -12($sp) # 4
-sw $t2, -16($sp) # 4
-sw $t3, -20($sp) # 4
-sw $t4, -24($sp) # 4
-subu $sp, 24 # 4
-sw $t4, -4($sp) # 4
-jal f # 4
-addu $sp, 24 # 4
-lw $ra, -4($sp) # 4
-lw $t0, -8($sp) # 4
-lw $t1, -12($sp) # 4
-lw $t2, -16($sp) # 4
-lw $t3, -20($sp) # 4
-lw $t4, -24($sp) # 4
-move $t5, $v0 # 4
-mul $t3, $t3, $t5 # 4
-add $t1, $t1, $t3 # 4
-move $a0, $t1 # 4
+move $t2, $v0 # 4
+mul $t1, $t1, $t2 # 4
+add $t0, $t0, $t1 # 4
+move $a0, $t0 # 4
 li $v0, 1 # 4
 syscall # 4
 li $v0, 4

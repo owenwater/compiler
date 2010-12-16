@@ -42,17 +42,17 @@ addu $sp, 20 # 9
 lw $ra, -12($sp) # 9
 lw $t0, -16($sp) # 9
 lw $t1, -20($sp) # 9
-move $t2, $v0 # 9
-sw $t2, -4($sp) # 9
-lw $t2, -4($sp) # 10
-lw $t3, -8($sp) # 10
-move $a0, $t2 # 10
+move $t0, $v0 # 9
+sw $t0, -4($sp) # 9
+lw $t0, -4($sp) # 10
+lw $t1, -8($sp) # 10
+move $a0, $t0 # 10
 li $v0, 1 # 10
 syscall # 10
 li $v0, 4
 la $a0, space # 10
 syscall # 10
-move $a0, $t3 # 10
+move $a0, $t1 # 10
 li $v0, 1 # 10
 syscall # 10
 li $v0, 4

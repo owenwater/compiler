@@ -18,30 +18,28 @@ jal f # 6
 addu $sp, 12 # 6
 lw $ra, -8($sp) # 6
 lw $t0, -12($sp) # 6
-move $t1, $v0 # 6
-sw $t1, -4($sp) # 6
-lw $t1, -4($sp) # 7
-move $a0, $t1 # 7
+move $t0, $v0 # 6
+sw $t0, -4($sp) # 6
+lw $t0, -4($sp) # 7
+move $a0, $t0 # 7
 li $v0, 1 # 7
 syscall # 7
 li $v0, 4
 la $a0, enter # 7
 syscall # 7
-li $t1, 10 # 8
+li $t0, 10 # 8
 sw $ra, -8($sp) # 8
 sw $t0, -12($sp) # 8
-sw $t1, -16($sp) # 8
-subu $sp, 16 # 8
-sw $t1, -4($sp) # 8
+subu $sp, 12 # 8
+sw $t0, -4($sp) # 8
 jal f # 8
-addu $sp, 16 # 8
+addu $sp, 12 # 8
 lw $ra, -8($sp) # 8
 lw $t0, -12($sp) # 8
-lw $t1, -16($sp) # 8
-move $t2, $v0 # 8
-sw $t2, -4($sp) # 8
-lw $t2, -4($sp) # 9
-move $a0, $t2 # 9
+move $t0, $v0 # 8
+sw $t0, -4($sp) # 8
+lw $t0, -4($sp) # 9
+move $a0, $t0 # 9
 li $v0, 1 # 9
 syscall # 9
 li $v0, 4
@@ -55,14 +53,14 @@ syscall # 10
 f: # 21
 lw $t0, -4($sp) # 13
 li $t1, 5 # 13
-blt $t0, $t1, cmp0 # 13
+blt $t0, $t1, _cmp0 # 13
 li $t0, 0 # 13
-j cmp_end0 # 13
-cmp0: # 13
+j _cmp_end0 # 13
+_cmp0: # 13
 li $t0, 1 # 13
-cmp_end0: # 13
-beq $t0, $zero, else0 # 20
-then0: # 20
+_cmp_end0: # 13
+beq $t0, $zero, _else0 # 20
+_then0: # 20
 sw $ra, -8($sp) # 14
 sw $t0, -12($sp) # 14
 subu $sp, 12 # 14
@@ -76,8 +74,8 @@ j $ra # 15
 addu $sp, 12 # 16
 lw $ra, -8($sp) # 16
 lw $t0, -12($sp) # 16
-j end_if0 # 20
-else0: # 20
+j _end_if0 # 20
+_else0: # 20
 sw $ra, -8($sp) # 18
 sw $t0, -12($sp) # 18
 subu $sp, 12 # 18
@@ -91,7 +89,7 @@ j $ra # 19
 addu $sp, 12 # 20
 lw $ra, -8($sp) # 20
 lw $t0, -12($sp) # 20
-end_if0: # 20
+_end_if0: # 20
 move $a3, $zero # 21
 move $v0, $a3 # 21
 j $ra # 21
