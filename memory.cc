@@ -9,7 +9,12 @@ void Memory::remove_slot(string name)
 {
 	this->set_it = this->regi.find(name);
 	if (this->set_it == this->regi.end())
-		throw("register doesnt exist");
+	{
+		string s = "register doesn't exist ";
+		s += name;
+		throw s.c_str();
+		throw("register doesn't exist" + name);
+	}
 	else
 		this->regi.erase(this->set_it);
 }

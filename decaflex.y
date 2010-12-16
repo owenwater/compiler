@@ -13,6 +13,7 @@
 	int add_arg(string reg, int arg_cnt);
 	int end_function(string reg);
 	int add_var_list();
+	string op_assign(string op, string value, string expr);
 
 	bool for_loop;
 	
@@ -30,7 +31,7 @@
 }
 
 %token T_COMMA
-%token T_ASSIGN
+%right T_ASSIGN T_PLUS_ASSIGN T_MINUS_ASSIGN T_MULT_ASSIGN T_DIV_ASSIGN T_MOD_ASSIGN T_AND_ASSIGN T_OR_ASSIGN T_LEFTSHIFT_ASSIGN T_RIGHTSHIFT_ASSIGN
 %token T_BOOL T_BREAK T_CALLOUT T_CONTINUE T_CLASS T_COMMENT T_DOT T_ELSE T_WQ T_EXTENDS T_FOR T_IF T_NEW T_NULL T_RETURN T_SEMICOLON T_VOID T_WHILE T_INT 
 %left T_CHARCONSTANT T_FALSE T_INTCONSTANT T_TRUE T_STRINGCONSTANT T_ID
 %left T_OR
@@ -128,7 +129,7 @@ var_decl_list: var_decl var_decl_list {
 			 }
 			 | {}
 
-var_decl: type  var id_comma_list tsemicolon   {
+var_decl: type var id_comma_list tsemicolon   {
 			id_list.push_back($2);
 		    add_var_list();
 			/*for (int i = 0; i < id_list.size(); i++)
@@ -292,6 +293,33 @@ assign:	lvalue T_ASSIGN expr {
 			s.stack[s.sp].remove_slot($3);
 			$$ = $1;
 	  	}
+		|lvalue T_PLUS_ASSIGN expr {
+			$$ = op_assign("add", $1, $3);
+		}
+		|lvalue T_MINUS_ASSIGN expr {
+			$$ = op_assign("sub", $1, $3);
+		}
+		|lvalue T_MULT_ASSIGN expr {
+			$$ = op_assign("mul", $1, $3);
+		}
+		|lvalue T_DIV_ASSIGN expr {
+			$$ = op_assign("div", $1, $3);
+		}
+		|lvalue T_MOD_ASSIGN expr {
+			$$ = op_assign("mod", $1, $3);
+		}
+		|lvalue T_AND_ASSIGN expr {
+			$$ = op_assign("and", $1, $3);
+		}
+		|lvalue T_OR_ASSIGN expr {
+			$$ = op_assign("or", $1, $3);
+		}
+		|lvalue T_LEFTSHIFT_ASSIGN expr {
+			$$ = op_assign("sllv", $1, $3);
+		}
+		|lvalue T_RIGHTSHIFT_ASSIGN expr {
+			$$ = op_assign("srlv", $1, $3);
+		}
 
 method_call: method_name tlparen expr_comma_list trparen {
 		   //user method call
@@ -593,6 +621,58 @@ twhile: T_WHILE {
 
 	
 %%
+
+string op_assign(string op, string value, string expr)
+{
+
+	int len = value.length();
+	string reg;
+	if (value[len-1] == ']')
+	{
+		int i = value.find('[');
+		string pos;
+		pos = s.stack[s.sp].find_slot();
+		s.add_cmd("move $" + pos +", $"+value.substr(i+1, len - i - 2));
+		reg =s.stack[s.sp].get_var(value.substr(0,i),  s,  
+		value.substr(i+1, len - i - 2));
+		//register is fine till here
+		if (op == "div" || op == "mod")
+		{
+			s.add_cmd("div $" + reg + ", $" + expr);
+			string op2;
+			if (op =="div") op2 = "mflo"; else op2 = "mfhi";
+			s.add_cmd(op2+" $" + reg);
+		}
+		else
+		{
+			s.add_cmd(op+" $" + reg + ", $" + reg + ", $" +  expr);
+		}
+		s.stack[s.sp].set_var(value.substr(0,i), reg,  s, 
+							  pos);
+	}
+	else
+	{
+		reg = s.stack[s.sp].get_var(value,s);
+		if (op == "div" || op == "mod")
+		{
+			s.add_cmd("div $" + reg + ", $" + expr);
+			string op2;
+			if (op =="div") op2 = "mflo"; else op2 = "mfhi";
+			s.add_cmd(op2+" $" + reg);
+		}
+		else
+		{
+			s.add_cmd(op+" $" + reg + ", $" + reg + ", $" +  expr);
+		}
+
+		s.stack[s.sp].set_var(value, reg, s);
+	}
+	s.stack[s.sp].remove_slot(reg);
+	s.stack[s.sp].remove_slot(expr);
+	return value;
+
+}
+
 
 int add_var_list()
 {

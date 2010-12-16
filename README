@@ -23,10 +23,10 @@ Run other decafe source:
 
 NEW Feature
 	0) more freedom while declare variable.
-		0.0) initialize variable during declare with comma.
+		0.0) declare variable with initialization with comma.
 			e.g.
 				int a = 4, b = 5;
-		0.1) declare local variable with initialize and
+		0.1) declare local variable with initialization and
 		     local array just like golbal variable
 		0.2) global variable and array now placed in heap.
 		0.3) variable can be initialized with expression.
@@ -35,10 +35,14 @@ NEW Feature
 			   of the declaration.
 			 e.g.
 			 	int a;
+				a = 3;
 				int b = a  + a;  (vaild)
 				========================
-				int a, b = a + a;(invaild)
-				int c = d + d, c (invaild)
+				int a = 4, b = a + a;(invaild)
+				int c = d + d, c = 5 (invaild)
+	1) enable assignment with operator inlucding:
+		+= -= *= /= %= &= |= >>= <<=
+	2) user comment including /**/ and //
 
 
 Current Feature:

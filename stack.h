@@ -28,10 +28,10 @@ class Memory
 
 		vector<string> release_list;
 
+		set<string> regi;
 	private:
 		
 		int num;
-		set<string> regi;
 		set<string>::iterator set_it;
 		map<string, int>::iterator map_it;
 		

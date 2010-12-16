@@ -175,6 +175,16 @@ int errorprint(int ecode)
 <NORMAL>true   { yylval = "true"; pos += 4; return T_TRUE;}
 <NORMAL>void   { yylval = "void"; pos += 4; return T_VOID; }
 <NORMAL>while   { yylval = "while"; pos += 5; return T_WHILE;}
+<NORMAL>"+=" {yylval = "+="; pos += 2; return T_PLUS_ASSIGN;}
+<NORMAL>"-=" {yylval = "-="; pos += 2; return T_MINUS_ASSIGN;}
+<NORMAL>"*=" {yylval = "*="; pos += 2; return T_MULT_ASSIGN;}
+<NORMAL>"/=" {yylval = "/="; pos += 2; return T_DIV_ASSIGN;}
+<NORMAL>"%=" {yylval = "%="; pos += 2; return T_MOD_ASSIGN;}
+<NORMAL>"&=" {yylval = "&="; pos += 2; return T_AND_ASSIGN;}
+<NORMAL>"|=" {yylval = "|="; pos += 2; return T_OR_ASSIGN;}
+<NORMAL>"<<=" {yylval = "<<="; pos += 3; return T_LEFTSHIFT_ASSIGN;}
+<NORMAL>">>=" {yylval = ">>="; pos += 3; return T_RIGHTSHIFT_ASSIGN;}
+
 <NORMAL>[a-zA-Z_][a-zA-Z_0-9]* {string s(yytext); yylval = s;
 									pos += s.length();
                                     return T_ID; }
