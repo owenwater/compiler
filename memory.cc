@@ -74,8 +74,15 @@ int Memory::add_var(string name, int len )
 	}
 	else
 	{
-		vars[name] = this->num;
-		this->num += len;
+		if (len == -1)
+		{
+			vars[name] = -((this->num)+1);
+		}
+		else
+		{
+			vars[name] = this->num;
+			this->num += len;
+		}
 	}
 	return 0;
 }

@@ -1,0 +1,13 @@
+class A {
+	
+	void main()
+	{
+		int a = 3;
+		f(&a);
+		callout("print_int", a, &a);
+	}
+	int f(int &a)
+	{
+		a = 4;
+	}
+}

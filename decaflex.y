@@ -23,6 +23,7 @@
 	vector <string> id_list;
 	const string for_split = "@@";
 	const char fun_tag = '~';
+	const char address_tag= '-';
 	
 	int if_cnt, loop_cnt, cmp_cnt;
 %}
@@ -128,6 +129,9 @@ param: type id {
 		|T_FUN id {
 					id_list.push_back($2);
 				}
+		|type T_ADDRESS id{
+			id_list.push_back(address_tag+$3);
+		}
 
 block: tlcb var_decl_list statement_list trcb {
 	 			$$ = $4;
@@ -139,11 +143,6 @@ var_decl_list: var_decl var_decl_list {
 var_decl: type var id_comma_list tsemicolon   {
 			id_list.push_back($2);
 		    add_var_list();
-			/*for (int i = 0; i < id_list.size(); i++)
-			{
-				int rt = s.stack[s.sp].add_var(id_list[i]);
-			}
-			id_list.clear();*/
 		}
 
 id_comma_list: tcomma var id_comma_list {
@@ -598,9 +597,19 @@ expr: lvalue {
 		$$ = op_assign("sub", $1, one);
 	  }
 	  | T_ADDRESS id{
+	  try{
+	  	string sp;
+	  	string address = s.find_var($2, sp);
+		string reg = s.stack[s.sp].find_slot();
+		s.add_cmd("addi $"+ reg+", $"+sp+", "+address);
+		$$ = reg;
+		}
+		catch (...)
+		{
 	  	string reg = s.stack[s.sp].find_slot();
 		s.add_cmd("la $"+reg+", " + $2);
 		$$ = reg;
+		}
 	  }
 
 
@@ -651,7 +660,14 @@ tlcb: T_LCB {
 			{
 				for (int i = id_list.size() - 1; i >= 0 ; i--)
 				{
-					s.stack[s.sp].add_var(id_list[i]);
+					if (id_list[i][0] == address_tag)
+					{
+						s.stack[s.sp].add_var(id_list[i].substr(1),-1);
+					}
+					else
+					{
+						s.stack[s.sp].add_var(id_list[i]);
+					}
 				}
 				id_list.clear();
 			}

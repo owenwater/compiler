@@ -160,19 +160,34 @@ string Stack::find_var(string name, string &pointer)
 	int pos;
 	//cerr<<finding_global << endl;
 	//cerr<<"===" << endl;
+	bool flag = false;
+	int v = (*it).second;
+	if (v < 0 )
+	{
+		v = -v-1;
+		flag = true;
+	}
 	if (sp > 0)
 	{
-		pos = base - ((*it).second)* Memory::step - Memory::step;
+		pos = base - v* Memory::step - Memory::step;
 		pointer = "sp";
 	}
 	else
 	{
-		//cerr  << "here" << endl;
-		pos = - ((*it).second)* Memory::step - Memory::step;
+		pos = - v* Memory::step - Memory::step;
 		pointer = hp;
 	}
+
 	stringstream ss;
 	ss << pos;
+	if (flag)
+	{
+		string reg = this->stack[this->sp].find_slot();
+		this->add_cmd("lw $" + reg + ", "+ss.str()+"($"+pointer+")");
+		pointer = reg;
+		return "0";
+	}
+
 	/*cerr << name <<": " << pos << endl;
 	cerr << name << ": " << endl;
 	cerr << this->sp <<", " << sp << endl;

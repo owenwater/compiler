@@ -1,6 +1,5 @@
 Author  : Owen min (zmin@sfu.ca)
-ID      : 301118996
-Version : 0.5
+Version : 0.6
 Webpage : https://github.com/owenwater/compiler
 
 Get the lastest version by:
@@ -16,6 +15,9 @@ For each test case, there are:
 	decafe source : test[i]
 	MIPS code     : a[i].s
 	error msg     : err[i]
+all test result will be print to stdout except quicksort.decaf 
+since it's too big
+the result will be same as ./test_result
 
 Run other decafe source:
 	./decafcc [file-name]
@@ -68,10 +70,12 @@ NEW Feature:
 		4.1) unary sign operator + (only has - before)
 			e.g.
 				+a+3
-		4.2) get address of function &
+		4.2) get address of function, variable or array with &
 			e.g.
 				int main
 				{
+					int a;
+					&a;
 					&f;
 				}
 				int f(){}
@@ -93,7 +97,24 @@ NEW Feature:
 			}
 		see more details about how it work in:
 			./test/fun_pointer.decaf
-		
+	7) reference
+		transmit variable's address and can modify the variable outside 
+		the function.
+			e.g.
+				int main()
+				{
+					int a;
+					a = 3;
+					f(&a)
+					callout("print_int", a);
+				}
+				int f(&a)
+				{
+					a = 4;
+				}
+			This program will output 4.
+		see more details in ./test/test24
+	8) more wisdom output, see Current Feature 5)	
 
 Current Feature:
 	0) global variable and array global declare and initialize
