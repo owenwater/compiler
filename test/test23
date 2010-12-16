@@ -1,0 +1,10 @@
+class A {
+	
+	void main()
+	{
+		int a = 12, b =7, c = 3;
+		b = a ^ 4;
+		c ^= a;
+		callout("print_int", a, b, c);
+	}
+}

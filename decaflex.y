@@ -32,10 +32,11 @@
 }
 
 %token T_COMMA
-%right T_ASSIGN T_PLUS_ASSIGN T_MINUS_ASSIGN T_MULT_ASSIGN T_DIV_ASSIGN T_MOD_ASSIGN T_AND_ASSIGN T_OR_ASSIGN T_LEFTSHIFT_ASSIGN T_RIGHTSHIFT_ASSIGN
+%right T_ASSIGN T_PLUS_ASSIGN T_MINUS_ASSIGN T_MULT_ASSIGN T_DIV_ASSIGN T_MOD_ASSIGN T_AND_ASSIGN T_OR_ASSIGN T_LEFTSHIFT_ASSIGN T_RIGHTSHIFT_ASSIGN T_XOR_ASSIGN
 %token T_BOOL T_BREAK T_CALLOUT T_CONTINUE T_CLASS T_COMMENT T_DOT T_ELSE T_WQ T_EXTENDS T_FOR T_IF T_NEW T_NULL T_RETURN T_SEMICOLON T_VOID T_WHILE T_INT T_FUN
 %left T_CHARCONSTANT T_FALSE T_INTCONSTANT T_TRUE T_STRINGCONSTANT T_ID
 %left T_OR
+%left T_XOR
 %left T_AND
 %left T_NEQ T_EQ
 %left T_GEQ T_GT T_LEQ T_LT
@@ -336,6 +337,9 @@ assign:	lvalue T_ASSIGN expr {
 		|lvalue T_RIGHTSHIFT_ASSIGN expr {
 			$$ = op_assign("srlv", $1, $3);
 		}
+		|lvalue T_XOR_ASSIGN expr {
+			$$ = op_assign("xor", $1, $3);
+		}
 
 method_call: method_name tlparen expr_comma_list trparen {
 		   //user method call
@@ -521,7 +525,11 @@ expr: lvalue {
 	  	s.add_cmd("or $" + $1 + ", $" + $1 + ", $" + $3);
 		s.stack[s.sp].remove_slot($3);
 		$$ = $1;
-
+	  }
+	  | expr T_XOR expr {
+	  	s.add_cmd("xor $" + $1 + ", $" + $1 + ", $" + $3);
+		s.stack[s.sp].remove_slot($3);
+		$$ = $1;
 	  }
 
 	  | T_MINUS expr %prec T_UMINUS {

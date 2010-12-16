@@ -41,12 +41,12 @@ NEW Feature:
 				int a = 4, b = a + a;(invaild)
 				int c = d + d, c = 5 (invaild)
 	1) more freedom with assignment.
-		1.0) enable assignment with operator inlucding:
-			  += -= *= /= %= &= |= >>= <<=
-		1.1) expression now could also be assignment.
+		1.0) enable assignment with operator, inlucding:
+			  += -= *= /= %= &= |= >>= <<= ^=
+		1.1) expression now can also be assignment.
 			 it means the compiler now support something like:
 			 	a = b += c -= 3;
-	2) user comment including /**/ and //
+	2) user comment, including /**/ and //
 	3) the statement now can also be expression, it will release the 
 	   register automatically for:
 		3.0) expression.
@@ -55,7 +55,7 @@ NEW Feature:
 		3.1) method call
 			int main(){ f();}
 			int f() {return 3;}
-	4) more operator  support.
+	4) more operators support.
 		4.0) self increment and decrement with ++, --.
 			  P.S. both ++a, a++ will increase a by one and return a+1
 			  	e.g.
@@ -75,6 +75,8 @@ NEW Feature:
 					&f;
 				}
 				int f(){}
+		4.3) xor with operator: ^, also support ^=(1.0) .
+
 	5) new type of variable "fun". Used to record the address of function
 	6) transmit function address as parameter
 		e.g.
