@@ -13,6 +13,8 @@ str1:
 .globl main
 main: 
 lui $s7, 0x1001
+move $v1, $ra
+move $ra, $v1 # 3
 li $t0, 1 # 5
 xori $t0, $t0, 1 # 5
 beq $t0, $zero, end_if0 # 9

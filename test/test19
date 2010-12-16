@@ -1,0 +1,18 @@
+class A {
+	int e =f(111);
+	void main()
+	{
+		int a;
+		a = 3;
+		callout("print_int", a);
+		int b = a + a;
+		callout("print_int", a, b);
+		int c = 13;
+		int d = f(c);
+		callout("print_int", c, d, e);
+	}
+	int f(int a)
+	{
+		return a+1;
+	}
+}

@@ -7,10 +7,12 @@ enter:
 .globl main
 main: 
 lui $s7, 0x1001
+move $v1, $ra
 li $t0, 4 # 2
 sw $t0, -4($s7) # 2
 li $t0, 5 # 3
 sw $t0, -8($s7) # 3
+move $ra, $v1 # 4
 li $t0, 1 # 7
 sw $t0, -4($sp) # 7
 li $t0, 2 # 8

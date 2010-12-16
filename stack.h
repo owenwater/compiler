@@ -66,8 +66,8 @@ class Stack
 		int output_sp;
 		int loop_sp;
 		
-	private:
 		bool main_function;
+	private:
 };
 
 

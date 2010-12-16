@@ -144,7 +144,7 @@ string Stack::find_var(string name, string &pointer)
 	{
 		sp--;
 	//	cerr << "stack: " <<sp <<", " << this->stack[sp].call_fun << endl;
-		if (sp < 0) throw("variable already exist");
+		if (sp < 0) throw("variable doesn't exist");
 		if (sp < this->sp)
 			base += this->stack[sp].cnt;
 		if (finding_global == 1) 

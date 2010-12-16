@@ -7,6 +7,8 @@ enter:
 .globl main
 main: 
 lui $s7, 0x1001
+move $v1, $ra
+move $ra, $v1 # 4
 li $v0, 5 # 7
 syscall # 7
 move $t0, $v0 # 7

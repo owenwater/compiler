@@ -10,6 +10,8 @@ str0:
 .globl main
 main: 
 lui $s7, 0x1001
+move $v1, $ra
+move $ra, $v1 # 3
 li $t0, 1 # 6
 li $t1, 2 # 6
 li $t2, 3 # 6

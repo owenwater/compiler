@@ -47,17 +47,22 @@
 %right T_LCB T_RCB
 
 %%
-program: tclass class_name tlcb field_decl_list method_decl_list trcb {
+program: tclass class_name tlcb field_decl_lists method_decl_list trcb {
 			print_string_taget();
 			cout << ".text"<< endl;
 			cout << ".globl main"<< endl;
 			cout << "main: " << endl;
 			cout << "lui $" << hp << ", 0x1001" << endl;
+			cout << "move $v1, $ra" << endl;
 
 			cout << $6 << endl;
 	   }
 class_name: id {
 		  }
+field_decl_lists: field_decl_list
+{
+			s.add_cmd("move $ra, $v1");
+}
 field_decl_list: field_decl_list field_decl {
 			   }
 			 	| {
@@ -65,43 +70,9 @@ field_decl_list: field_decl_list field_decl {
 field_decl: type field_list {
 
 		  int i;
-		 /* for (i = id_list.size() - 1; i >= 0; i--)
-		  {
-		  	int len = id_list[i].length();
-			if (id_list[i].find('=') != string::npos)
-			{
-				int index = id_list[i].find('=');
-				string id = id_list[i].substr(0,index);
-				string value = id_list[i].substr(index+1);
-				s.stack[s.sp].add_var(id);
-				s.stack[s.sp].set_var(id, value, s);
-				s.stack[s.sp].remove_slot(value);
-			}
-		  	else if (id_list[i][len - 1] != ']')
-			{
-				int rt = s.stack[s.sp].add_var(id_list[i]);
-			}
-			else
-			{
-				int index = id_list[i].find('[');
-				string id = id_list[i].substr(0, index);
-				stringstream ss(id_list[i].substr(index +1 
-				                        , len - index - 2));
-				int l;
-				ss >> l;
-				int rt = s.stack[s.sp].add_var(id, l);
-			}
-			
+			  add_var_list();
 		  }
-		  id_list.clear();*/
-		  add_var_list();
-		  }
-		   /*|type id T_ASSIGN constant tsemicolon{
-		   	int rt = s.stack[s.sp].add_var($2);
-			s.stack[s.sp].set_var($2, $4, s);
-			s.stack[s.sp].remove_slot($4);
-		   	   }*/
-field_list: field tcomma field_list {
+		   field_list: field tcomma field_list {
 		  }
 			| field tsemicolon {
 			}
@@ -111,7 +82,7 @@ field:  id {
 	    | id tlsb T_INTCONSTANT trsb  {
 		 id_list.push_back($1+"["+ $3+"]");
 		    }
-		| id T_ASSIGN constant {
+		| id T_ASSIGN expr {
 		id_list.push_back($1+"="+$3);
 		   }
 
@@ -179,7 +150,7 @@ var:id {
 	    | id tlsb T_INTCONSTANT trsb  {
 		 $$ = $1+"["+ $3+"]";
 		    }
-		| id T_ASSIGN constant {
+		| id T_ASSIGN expr {
 		$$ = $1+"="+$3;
 		   }
 
@@ -193,7 +164,9 @@ statement_list: statement statement_list{
 			  | {}
 
 statement:
-		 assign tsemicolon {
+		 var_decl {
+		 }
+		 |assign tsemicolon {
 		 }
 		 |method_call tsemicolon {
 		 }

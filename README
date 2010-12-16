@@ -26,9 +26,20 @@ NEW Feature
 		0.0) initialize variable during declare with comma.
 			e.g.
 				int a = 4, b = 5;
-		0.1) user can declare local variable with initialize and
+		0.1) declare local variable with initialize and
 		     local array just like golbal variable
 		0.2) global variable and array now placed in heap.
+		0.3) variable can be initialized with expression.
+		0.4) declare the local variable everywhere.
+		       But variable can only be used in the following line
+			   of the declaration.
+			 e.g.
+			 	int a;
+				int b = a  + a;  (vaild)
+				========================
+				int a, b = a + a;(invaild)
+				int c = d + d, c (invaild)
+
 
 Current Feature:
 	0) global variable and array global declare and initialize

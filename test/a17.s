@@ -7,6 +7,8 @@ enter:
 .globl main
 main: 
 lui $s7, 0x1001
+move $v1, $ra
+move $ra, $v1 # 2
 li $t0, 4 # 4
 sw $ra, -4($sp) # 4
 sw $t0, -8($sp) # 4
